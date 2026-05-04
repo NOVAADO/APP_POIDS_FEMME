@@ -108,6 +108,18 @@ export const groceryCategoryLabel: Record<GroceryCategory, string> = {
   other: "Autre",
 };
 
+export const groceryCategoryIcon: Record<GroceryCategory, string> = {
+  fruits_vegetables: "🥕",
+  refrigerated: "🥛",
+  meat_substitutes: "🍗",
+  pantry: "🌾",
+  frozen: "🧊",
+  bakery: "🍞",
+  condiments: "🧂",
+  household: "🧴",
+  other: "📦",
+};
+
 export const groceryCategoryOrder: GroceryCategory[] = [
   "fruits_vegetables",
   "refrigerated",

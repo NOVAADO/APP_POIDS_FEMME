@@ -17,7 +17,6 @@ import { getRecipeById } from "@/lib/recipes";
 import { getWorkoutCompletion } from "@/lib/workouts";
 import { Card } from "./ui/card";
 import { ScreenHeader } from "./ui/screen-header";
-import { Badge } from "./ui/badge";
 import { MascotAvatar } from "./mascot-avatar";
 
 type TodayScreenProps = {
@@ -86,12 +85,14 @@ export function TodayScreen({
 
       <PrimaryAction
         eyebrow="Bouger"
+        accent="moss"
+        icon="💪"
         title={workoutPlan.title}
         meta={
           <>
             <span className="text-base font-semibold tabular-nums text-ink-900">
               {done}<span className="text-sand-700"> / {total}</span>
-            </span>
+            </span>{" "}
             <span className="text-xs text-sand-700">activités faites</span>
           </>
         }
@@ -101,6 +102,8 @@ export function TodayScreen({
 
       <PrimaryAction
         eyebrow="Repas du jour"
+        accent="rose"
+        icon="🍲"
         title={
           plannedToday.length === 0
             ? "Aucun repas prévu"
@@ -132,6 +135,8 @@ export function TodayScreen({
 
       <PrimaryAction
         eyebrow="Épicerie"
+        accent="warm"
+        icon="🛒"
         title={
           groceryItems.length === 0
             ? "Liste vide"
@@ -160,6 +165,8 @@ export function TodayScreen({
 
       <PrimaryAction
         eyebrow="Suivi doux"
+        accent="cream"
+        icon="🌿"
         title="Quelques cases pour ton journal"
         hint="Sans graphique anxiogène. Sans poids central."
         onClick={() => onNavigate("progress")}
@@ -173,36 +180,73 @@ export function TodayScreen({
   );
 }
 
+type ActionAccent = "moss" | "rose" | "warm" | "cream";
+
+const ACTION_ACCENT: Record<
+  ActionAccent,
+  { bg: string; iconBg: string; ring: string }
+> = {
+  moss: {
+    bg: "bg-moss-50",
+    iconBg: "bg-moss-500/15 text-moss-600",
+    ring: "ring-moss-500/20",
+  },
+  rose: {
+    bg: "bg-rose-50",
+    iconBg: "bg-rose-100 text-rose-700",
+    ring: "ring-rose-200",
+  },
+  warm: {
+    bg: "bg-amber-50",
+    iconBg: "bg-amber-100 text-amber-800",
+    ring: "ring-amber-200",
+  },
+  cream: {
+    bg: "bg-cream-100",
+    iconBg: "bg-white text-sand-600",
+    ring: "ring-cream-200",
+  },
+};
+
 type PrimaryActionProps = {
   eyebrow: string;
+  accent: ActionAccent;
+  icon: string;
   title: string;
   meta?: React.ReactNode;
   hint?: string;
   onClick: () => void;
-  trailing?: React.ReactNode;
 };
 
-function PrimaryAction({ eyebrow, title, meta, hint, onClick, trailing }: PrimaryActionProps) {
+function PrimaryAction({ eyebrow, accent, icon, title, meta, hint, onClick }: PrimaryActionProps) {
+  const palette = ACTION_ACCENT[accent];
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="w-full text-left"
-    >
-      <Card padding="lg" className="space-y-2 transition-colors hover:bg-cream-100">
-        <div className="flex items-start justify-between gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
-            {eyebrow}
-          </p>
-          {trailing ?? (
-            <Badge tone="neutral">
-              <span aria-hidden>→</span>
-            </Badge>
-          )}
+    <button type="button" onClick={onClick} className="w-full text-left">
+      <Card
+        padding="lg"
+        className={`relative space-y-2 transition-shadow hover:shadow-hero ${palette.bg}`}
+      >
+        <div className="flex items-start gap-3">
+          <div
+            aria-hidden
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-soft text-2xl ${palette.iconBg}`}
+          >
+            {icon}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-sand-700">
+              {eyebrow}
+            </p>
+            <p className="mt-0.5 text-lg font-semibold leading-tight text-ink-900">
+              {title}
+            </p>
+          </div>
+          <span aria-hidden className="text-sand-700 text-base">
+            →
+          </span>
         </div>
-        <p className="text-lg font-semibold text-ink-900">{title}</p>
-        {meta ? <div>{meta}</div> : null}
-        {hint ? <p className="text-xs text-sand-700">{hint}</p> : null}
+        {meta ? <div className="ml-[60px]">{meta}</div> : null}
+        {hint ? <p className="ml-[60px] text-xs text-sand-700">{hint}</p> : null}
       </Card>
     </button>
   );

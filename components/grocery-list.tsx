@@ -1,9 +1,9 @@
 "use client";
 
 import type { GroceryItem } from "@/lib/types";
-import { groceryCategoryLabel, storeLabel } from "@/lib/labels";
+import { groceryCategoryIcon, groceryCategoryLabel, storeLabel } from "@/lib/labels";
 import { groupGroceryItemsByCategory } from "@/lib/grocery";
-import { formatGroceryItemName, formatGroceryStatus } from "@/lib/format";
+import { formatGroceryItemName } from "@/lib/format";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 
@@ -13,11 +13,33 @@ type GroceryListProps = {
   onTogglePurchased: (key: string) => void;
 };
 
+function StatusChip({ item }: { item: GroceryItem }) {
+  if (item.purchased) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-pill bg-moss-500 px-2.5 py-0.5 text-[11px] font-medium text-cream-50">
+        <span aria-hidden>✓</span> Acheté
+      </span>
+    );
+  }
+  if (item.inPantry) {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-pill bg-cream-200 px-2.5 py-0.5 text-[11px] font-medium text-sand-700">
+        <span aria-hidden>🏠</span> Déjà à la maison
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-pill bg-amber-100 px-2.5 py-0.5 text-[11px] font-medium text-amber-800">
+      À acheter
+    </span>
+  );
+}
+
 export function GroceryList({ items, onTogglePantry, onTogglePurchased }: GroceryListProps) {
   if (items.length === 0) {
     return (
       <Card>
-        <p className="text-sm text-sand-600">
+        <p className="text-sm text-sand-700">
           Aucun ingrédient pour le moment. Choisis des recettes dans le planificateur, la liste se
           construira toute seule.
         </p>
@@ -31,15 +53,22 @@ export function GroceryList({ items, onTogglePantry, onTogglePurchased }: Grocer
     <div className="space-y-3">
       {groups.map(({ category, items: categoryItems }) => (
         <Card key={category} className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
-            {groceryCategoryLabel[category]}
-          </p>
+          <div className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-cream-100 text-lg"
+            >
+              {groceryCategoryIcon[category]}
+            </span>
+            <p className="text-sm font-semibold text-ink-900">
+              {groceryCategoryLabel[category]}
+            </p>
+          </div>
           <ul className="space-y-2">
             {categoryItems.map((item) => {
               const stores = item.deals
                 ? Array.from(new Set(item.deals.map((d) => storeLabel[d.storeId])))
                 : [];
-              const status = formatGroceryStatus(item);
               return (
                 <li
                   key={item.key}
@@ -56,12 +85,14 @@ export function GroceryList({ items, onTogglePantry, onTogglePurchased }: Grocer
                       <p className="text-sm font-medium text-ink-900">
                         {formatGroceryItemName(item)}
                       </p>
-                      <p className="text-xs text-sand-600">{status}</p>
+                      <div className="mt-1.5">
+                        <StatusChip item={item} />
+                      </div>
                     </div>
                   </div>
 
                   {stores.length > 0 ? (
-                    <p className="mt-1 text-xs text-amber-700">
+                    <p className="mt-2 text-xs text-amber-700">
                       Rabais à vérifier : {stores.join(", ")}
                     </p>
                   ) : null}

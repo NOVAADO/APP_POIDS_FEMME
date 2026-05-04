@@ -1,6 +1,7 @@
 import type {
   Equipment,
   FoodFilter,
+  FoodStructurePreference,
   GroceryCategory,
   HormonalStage,
   MealType,
@@ -8,6 +9,14 @@ import type {
   StoreId,
   UserProfile,
 } from "./types";
+
+export type FoodStructureKey =
+  | "protein"
+  | "vegetables"
+  | "salad"
+  | "fruit"
+  | "grainOrStarch"
+  | "fat";
 
 export const hormonalStageOptions: { value: HormonalStage; label: string }[] = [
   { value: "premenopause", label: "Préménopause" },
@@ -119,6 +128,33 @@ export const storeLabel: Record<StoreId, string> = {
   maxi: "Maxi",
   walmart: "Walmart",
 };
+
+export const foodStructureLabel: Record<FoodStructureKey, string> = {
+  protein: "Protéine",
+  vegetables: "Légumes",
+  salad: "Salade",
+  fruit: "Fruit",
+  grainOrStarch: "Féculent",
+  fat: "Lipide",
+};
+
+export const foodStructureLabelPrecise: Record<FoodStructureKey, string> = {
+  protein: "Source de protéine",
+  vegetables: "Portion de légumes cuits",
+  salad: "Portion de crudités ou salade",
+  fruit: "Portion de fruit",
+  grainOrStarch: "Féculent ou grain entier",
+  fat: "Petite portion de bons gras",
+};
+
+export const foodStructurePreferenceOptions: {
+  value: FoodStructurePreference;
+  label: string;
+}[] = [
+  { value: "hidden", label: "Masquer les repères" },
+  { value: "soft", label: "Repères doux" },
+  { value: "precise", label: "Repères plus précis" },
+];
 
 export const storeOptions: { value: StoreId; label: string }[] = [
   { value: "iga", label: "IGA" },

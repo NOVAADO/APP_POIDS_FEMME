@@ -3,6 +3,7 @@
 import type {
   Equipment,
   FoodFilter,
+  FoodStructurePreference,
   HormonalStage,
   MascotAnimal,
   NeuroProfile,
@@ -15,6 +16,7 @@ import {
   cookingCapacityOptions,
   equipmentOptions,
   foodFilterOptions,
+  foodStructurePreferenceOptions,
   hormonalStageOptions,
   neuroProfileOptions,
   servingsOptions,
@@ -137,6 +139,18 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
           options={cookingCapacityOptions}
           value={profile.cookingCapacity}
           onChange={(v) => update("cookingCapacity", v)}
+        />
+      </Card>
+
+      <Card>
+        <SectionTitle hint="Ces repères servent à simplifier les choix. Tu peux les masquer ou les rendre plus précis.">
+          Repères alimentaires
+        </SectionTitle>
+        <ToggleGroup<FoodStructurePreference>
+          mode="single"
+          options={foodStructurePreferenceOptions}
+          value={profile.foodStructurePreference}
+          onChange={(v) => update("foodStructurePreference", v)}
         />
       </Card>
 

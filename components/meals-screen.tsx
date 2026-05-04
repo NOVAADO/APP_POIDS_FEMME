@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type {
   DayKey,
   MascotProfile,
@@ -55,6 +55,8 @@ export function MealsScreen({
     return map;
   }, [visibleRecipes]);
 
+  const [structureInfoOpen, setStructureInfoOpen] = useState(false);
+
   return (
     <div className="space-y-5">
       <header>
@@ -65,6 +67,29 @@ export function MealsScreen({
       </header>
 
       <MascotCard mascot={mascot} context="meals" />
+
+      {profile.foodStructurePreference !== "hidden" ? (
+        <Card className="space-y-2">
+          <button
+            type="button"
+            onClick={() => setStructureInfoOpen((v) => !v)}
+            aria-expanded={structureInfoOpen}
+            className="flex w-full items-center justify-between gap-2 text-left"
+          >
+            <span className="text-sm font-medium text-ink-900">Repères alimentaires</span>
+            <span className="text-xs text-moss-600">
+              {structureInfoOpen ? "Masquer" : "En savoir plus"}
+            </span>
+          </button>
+          {structureInfoOpen ? (
+            <p className="text-sm text-sand-600">
+              L’application peut afficher la structure simple des repas : protéine, légumes, fruit,
+              féculent et lipide. Ces repères servent à réduire les décisions, pas à te contrôler.
+              Tu peux les masquer ou les rendre plus précis dans ton profil.
+            </p>
+          ) : null}
+        </Card>
+      ) : null}
 
       <section>
         <SectionTitle hint="Tu peux modifier les portions en tout temps. Les quantités s’ajustent automatiquement.">
@@ -125,6 +150,7 @@ export function MealsScreen({
                       recipe={recipe}
                       compatible={compatible}
                       hiddenByDefault={!compatible && showAllRecipes}
+                      structurePreference={profile.foodStructurePreference}
                     />
                   );
                 })}

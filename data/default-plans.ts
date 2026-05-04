@@ -11,6 +11,7 @@ export const defaultUserProfile: UserProfile = {
   householdDefaultServings: 4,
   breakfastPreference: "salty",
   cookingCapacity: "low",
+  foodStructurePreference: "soft",
   remindersEnabled: true,
 };
 

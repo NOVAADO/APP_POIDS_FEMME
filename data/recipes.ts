@@ -21,6 +21,7 @@ export const recipes: Recipe[] = [
     tags: ["glycemic_stable", "high_protein", "salty_breakfast", "quick"],
     excludedFor: ["egg_free"],
     recommendedFor: ["sci"],
+    foodStructure: { protein: true, vegetables: true, fat: true },
   },
   {
     id: "yogourt-grec-fruits",
@@ -37,6 +38,7 @@ export const recipes: Recipe[] = [
     tags: ["high_protein", "high_fiber", "soft_sweet", "quick"],
     excludedFor: ["lactose_free", "no_bovine"],
     recommendedFor: [],
+    foodStructure: { protein: true, fruit: true, fat: true },
   },
   {
     id: "tofu-brouille",
@@ -58,6 +60,7 @@ export const recipes: Recipe[] = [
     tags: ["high_protein", "salty_breakfast", "quick"],
     excludedFor: [],
     recommendedFor: ["vegetarian", "lactose_free", "no_bovine"],
+    foodStructure: { protein: true, vegetables: true, fat: true },
   },
   {
     id: "bol-poulet-quinoa",
@@ -80,6 +83,7 @@ export const recipes: Recipe[] = [
     tags: ["glycemic_stable", "high_protein", "high_fiber", "lunchbox", "family_friendly"],
     excludedFor: ["vegetarian"],
     recommendedFor: ["lactose_free"],
+    foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
   },
   {
     id: "soupe-lentilles",
@@ -97,6 +101,7 @@ export const recipes: Recipe[] = [
     tags: ["high_fiber", "high_protein", "freezer_friendly", "family_friendly"],
     excludedFor: ["sci"],
     recommendedFor: ["vegetarian", "lactose_free"],
+    foodStructure: { protein: true, vegetables: true, grainOrStarch: true },
   },
   {
     id: "wrap-poulet",
@@ -114,6 +119,7 @@ export const recipes: Recipe[] = [
     tags: ["quick", "lunchbox", "low_prep"],
     excludedFor: ["gluten_free"],
     recommendedFor: ["lactose_free"],
+    foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
   },
   {
     id: "saumon-pdt-brocoli",
@@ -135,6 +141,7 @@ export const recipes: Recipe[] = [
     tags: ["glycemic_stable", "high_protein", "family_friendly"],
     excludedFor: ["vegetarian"],
     recommendedFor: ["lactose_free", "gluten_free"],
+    foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
   },
   {
     id: "chili-lentilles",
@@ -152,6 +159,7 @@ export const recipes: Recipe[] = [
     tags: ["high_fiber", "high_protein", "freezer_friendly", "family_friendly"],
     excludedFor: ["sci", "reflux"],
     recommendedFor: ["vegetarian"],
+    foodStructure: { protein: true, vegetables: true },
   },
   {
     id: "omelette-repas",
@@ -168,6 +176,7 @@ export const recipes: Recipe[] = [
     tags: ["high_protein", "quick", "family_friendly"],
     excludedFor: ["egg_free"],
     recommendedFor: ["gluten_free"],
+    foodStructure: { protein: true, vegetables: true, fat: true },
   },
   {
     id: "houmous-legumes",
@@ -184,5 +193,6 @@ export const recipes: Recipe[] = [
     tags: ["high_fiber", "quick", "low_prep"],
     excludedFor: [],
     recommendedFor: ["vegetarian", "lactose_free"],
+    foodStructure: { protein: true, vegetables: true, fat: true },
   },
 ];

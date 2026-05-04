@@ -170,6 +170,17 @@ export type RecipeTag =
   | "low_prep"
   | "lunchbox";
 
+export type FoodStructure = {
+  protein?: boolean;
+  vegetables?: boolean;
+  salad?: boolean;
+  fruit?: boolean;
+  grainOrStarch?: boolean;
+  fat?: boolean;
+};
+
+export type FoodStructurePreference = "hidden" | "soft" | "precise";
+
 export type Recipe = {
   id: string;
   title: string;
@@ -181,6 +192,7 @@ export type Recipe = {
   tags: RecipeTag[];
   excludedFor: FoodFilter[];
   recommendedFor: FoodFilter[];
+  foodStructure?: FoodStructure;
   notes?: string;
   imageKey?: string;
 };
@@ -260,6 +272,7 @@ export type UserProfile = {
   householdDefaultServings: number;
   breakfastPreference: "salty" | "soft_sweet" | "no_preference";
   cookingCapacity: "low" | "medium" | "good";
+  foodStructurePreference: FoodStructurePreference;
   remindersEnabled: boolean;
 };
 

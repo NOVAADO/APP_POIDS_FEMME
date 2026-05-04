@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Recipe } from "@/lib/types";
+import type { FoodStructurePreference, Recipe } from "@/lib/types";
 import { mealTypeLabel } from "@/lib/labels";
-import { scaleIngredients } from "@/lib/recipes";
+import { getMealStructureSummary, scaleIngredients } from "@/lib/recipes";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 
@@ -25,6 +25,7 @@ type RecipeCardProps = {
   servings?: number;
   compatible?: boolean;
   hiddenByDefault?: boolean;
+  structurePreference?: FoodStructurePreference;
 };
 
 export function RecipeCard({
@@ -32,10 +33,15 @@ export function RecipeCard({
   servings,
   compatible = true,
   hiddenByDefault = false,
+  structurePreference = "soft",
 }: RecipeCardProps) {
   const [expanded, setExpanded] = useState(false);
   const effectiveServings = servings ?? recipe.baseServings;
   const ingredients = scaleIngredients(recipe, effectiveServings);
+  const showStructure = structurePreference !== "hidden" && Boolean(recipe.foodStructure);
+  const structureSummary = showStructure
+    ? getMealStructureSummary(recipe, structurePreference === "precise")
+    : [];
 
   return (
     <Card className="space-y-3">
@@ -68,6 +74,21 @@ export function RecipeCard({
           Cette recette est masquée par défaut selon ton profil. Tu la vois parce que tu as activé
           « Voir toutes les recettes ».
         </p>
+      ) : null}
+
+      {structureSummary.length > 0 ? (
+        <div>
+          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
+            Repères du repas
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {structureSummary.map((label) => (
+              <Badge key={label} tone="moss">
+                {label}
+              </Badge>
+            ))}
+          </div>
+        </div>
       ) : null}
 
       <button

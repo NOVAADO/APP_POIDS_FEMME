@@ -7,6 +7,7 @@ import { getMealStructureSummary, scaleIngredients } from "@/lib/recipes";
 import { formatHumanQuantity } from "@/lib/format";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { MealIllustration } from "./meal-illustration";
 
 const tagLabel: Record<string, string> = {
   glycemic_stable: "Glycémie stable",
@@ -68,7 +69,9 @@ export function RecipeCard({
   const supportNote = recipe.supportNote ?? "Repas simple à ajouter à ta semaine.";
 
   return (
-    <Card padding="lg" className="space-y-3">
+    <Card padding="none" className="overflow-hidden">
+      <MealIllustration mealType={recipe.mealType} size="banner" className="rounded-none" />
+      <div className="space-y-3 p-5">
       <p className="text-xs text-sand-600">
         {mealTypeLabel[recipe.mealType]} · {compatLabel}
       </p>
@@ -147,6 +150,7 @@ export function RecipeCard({
           </div>
         </div>
       ) : null}
+      </div>
     </Card>
   );
 }

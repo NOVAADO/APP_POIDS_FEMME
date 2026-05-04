@@ -10,21 +10,11 @@ const SIZE_CLASS: Record<Size, string> = {
 };
 
 const ACCENT_BG: Record<MascotAccent, string> = {
-  moss: "#eef3e7",
-  sand: "#f4ecd9",
-  cream: "#f8f1e3",
-  warm: "#fde6cf",
-  rose: "#fbe1e1",
-};
-
-type Clothes = { cloth: string; clothShade: string; collar: string };
-
-const ACCENT_CLOTHES: Record<MascotAccent, Clothes> = {
-  moss: { cloth: "#6f8160", clothShade: "#566649", collar: "#3f4b35" },
-  sand: { cloth: "#c8a780", clothShade: "#a08560", collar: "#7a6c54" },
-  cream: { cloth: "#b6a07e", clothShade: "#8c7c5e", collar: "#5b5040" },
-  warm: { cloth: "#c66a3d", clothShade: "#8d4a28", collar: "#6a3315" },
-  rose: { cloth: "#c08585", clothShade: "#8e5e5e", collar: "#693a3a" },
+  moss: "#e8efe0",
+  sand: "#f4ead4",
+  cream: "#faf2e1",
+  warm: "#fcdfc1",
+  rose: "#fbdada",
 };
 
 type AnimalColors = {
@@ -35,53 +25,59 @@ type AnimalColors = {
 };
 
 const ANIMAL_COLORS: Record<MascotAnimal, AnimalColors> = {
-  capybara: { fur: "#b48a64", furShade: "#8b6646", belly: "#e6cba6", inner: "#7a5538" },
-  loutre: { fur: "#9a7556", furShade: "#73533a", belly: "#e0c4a3", inner: "#5e3f2a" },
-  renarde: { fur: "#cc7a3f", furShade: "#a35c28", belly: "#f6d6a8", inner: "#7a3f17" },
-  biche: { fur: "#c89773", furShade: "#9a6f4f", belly: "#f0d4ad", inner: "#6e4a31" },
-  ourse: { fur: "#8f6648", furShade: "#65462d", belly: "#d6b58a", inner: "#5a3d27" },
-  hibou: { fur: "#9d7045", furShade: "#75502c", belly: "#e8c98c", inner: "#5b3e22" },
-  koala: { fur: "#a3a8ac", furShade: "#73797d", belly: "#e2e4e6", inner: "#525557" },
-  louve: { fur: "#8a847f", furShade: "#5b5651", belly: "#d6cfca", inner: "#3d3a37" },
+  capybara: { fur: "#b58866", furShade: "#7d5a3c", belly: "#ebd1aa", inner: "#3d2c1d" },
+  loutre: { fur: "#8e6a4a", furShade: "#5e4530", belly: "#dcc09a", inner: "#2e2014" },
+  renarde: { fur: "#d97a3a", furShade: "#a4521e", belly: "#fbe2bf", inner: "#3a1e0c" },
+  biche: { fur: "#cd9876", furShade: "#9b6f4d", belly: "#f3d9b3", inner: "#36241a" },
+  ourse: { fur: "#7e5639", furShade: "#523a26", belly: "#cca987", inner: "#2c1d10" },
+  hibou: { fur: "#9d6f44", furShade: "#6e4d2c", belly: "#ecca8a", inner: "#2e1f10" },
+  koala: { fur: "#a4abae", furShade: "#6a7174", belly: "#e3e6e8", inner: "#262827" },
+  louve: { fur: "#9b9590", furShade: "#65615d", belly: "#e0d9d3", inner: "#1f1d1c" },
 };
 
-function GroundShadow() {
-  return <ellipse cx="50" cy="96" rx="28" ry="3" fill="#000" opacity="0.08" />;
-}
+type Clothes = { cloth: string; clothShade: string };
+
+const ACCENT_CLOTHES: Record<MascotAccent, Clothes> = {
+  moss: { cloth: "#7a8a6b", clothShade: "#566649" },
+  sand: { cloth: "#c8a780", clothShade: "#9c7d57" },
+  cream: { cloth: "#cebb96", clothShade: "#9b8865" },
+  warm: { cloth: "#d3754a", clothShade: "#9c4d29" },
+  rose: { cloth: "#c97d8b", clothShade: "#965765" },
+};
 
 function Sweater({ clothes }: { clothes: Clothes }) {
   return (
     <g>
-      {/* sweater body covers from neck down to bottom of frame */}
       <path
-        d="M22 100 L22 80 Q22 72 32 70 Q40 78 50 78 Q60 78 68 70 Q78 72 78 80 L78 100 Z"
+        d="M14 100 L14 78 Q14 68 26 66 Q36 78 50 78 Q64 78 74 66 Q86 68 86 78 L86 100 Z"
         fill={clothes.cloth}
       />
-      {/* ribbed hem hint */}
       <path
-        d="M22 92 L78 92"
+        d="M28 76 L72 76"
         stroke={clothes.clothShade}
-        strokeWidth="1.5"
-        opacity="0.5"
+        strokeWidth="1.6"
+        opacity="0.45"
       />
-      {/* collar / round neckline */}
       <path
-        d="M36 70 Q50 78 64 70 Q58 74 50 74 Q42 74 36 70 Z"
+        d="M34 70 Q50 80 66 70 Q58 78 50 78 Q42 78 34 70 Z"
         fill={clothes.clothShade}
+        opacity="0.85"
       />
     </g>
   );
 }
 
-function Eyes({ shade }: { shade: string }) {
+function SparkleEyes({ shade }: { shade: string }) {
   return (
     <g>
-      <ellipse cx="38" cy="50" rx="6" ry="7" fill={shade} />
-      <circle cx="36.5" cy="47.5" r="2.2" fill="#ffffff" />
-      <circle cx="40" cy="52" r="0.9" fill="#ffffff" opacity="0.8" />
-      <ellipse cx="62" cy="50" rx="6" ry="7" fill={shade} />
-      <circle cx="60.5" cy="47.5" r="2.2" fill="#ffffff" />
-      <circle cx="64" cy="52" r="0.9" fill="#ffffff" opacity="0.8" />
+      {/* left eye */}
+      <ellipse cx="38" cy="48" rx="6.5" ry="8" fill={shade} />
+      <circle cx="36" cy="44.5" r="2.6" fill="#ffffff" />
+      <circle cx="40.5" cy="51" r="1" fill="#ffffff" opacity="0.85" />
+      {/* right eye */}
+      <ellipse cx="62" cy="48" rx="6.5" ry="8" fill={shade} />
+      <circle cx="60" cy="44.5" r="2.6" fill="#ffffff" />
+      <circle cx="64.5" cy="51" r="1" fill="#ffffff" opacity="0.85" />
     </g>
   );
 }
@@ -89,8 +85,8 @@ function Eyes({ shade }: { shade: string }) {
 function Cheeks() {
   return (
     <g>
-      <ellipse cx="28" cy="62" rx="4.5" ry="2.8" fill="#f4a3b0" opacity="0.55" />
-      <ellipse cx="72" cy="62" rx="4.5" ry="2.8" fill="#f4a3b0" opacity="0.55" />
+      <ellipse cx="26" cy="60" rx="5.5" ry="3" fill="#f3a4ae" opacity="0.6" />
+      <ellipse cx="74" cy="60" rx="5.5" ry="3" fill="#f3a4ae" opacity="0.6" />
     </g>
   );
 }
@@ -98,9 +94,9 @@ function Cheeks() {
 function Smile({ stroke }: { stroke: string }) {
   return (
     <path
-      d="M44 65 Q50 69 56 65"
+      d="M44 63 Q50 67 56 63"
       stroke={stroke}
-      strokeWidth="1.6"
+      strokeWidth="1.7"
       strokeLinecap="round"
       fill="none"
     />
@@ -108,207 +104,248 @@ function Smile({ stroke }: { stroke: string }) {
 }
 
 function Nose({ fill }: { fill: string }) {
-  return <ellipse cx="50" cy="58" rx="2.4" ry="1.8" fill={fill} />;
-}
-
-function HeadBase({ colors, headPath }: { colors: AnimalColors; headPath: ReactElement }) {
-  return (
-    <g>
-      {headPath}
-      <ellipse cx="50" cy="60" rx="20" ry="14" fill={colors.belly} opacity="0.55" />
-    </g>
-  );
+  return <ellipse cx="50" cy="56" rx="2.5" ry="1.9" fill={fill} />;
 }
 
 type Renderer = (colors: AnimalColors, clothes: Clothes) => ReactElement;
 
 const RENDERERS: Record<MascotAnimal, Renderer> = {
+  // CAPYBARA — round, calm, neutral
   capybara: (c, w) => (
     <g>
-      <GroundShadow />
-      <ellipse cx="32" cy="32" rx="5" ry="4" fill={c.fur} />
-      <ellipse cx="68" cy="32" rx="5" ry="4" fill={c.fur} />
-      <ellipse cx="32" cy="33" rx="2.5" ry="2" fill={c.furShade} opacity="0.45" />
-      <ellipse cx="68" cy="33" rx="2.5" ry="2" fill={c.furShade} opacity="0.45" />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="32" ry="28" fill={c.fur} />} />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      {/* small ears */}
+      <ellipse cx="28" cy="26" rx="6" ry="5" fill={c.fur} />
+      <ellipse cx="72" cy="26" rx="6" ry="5" fill={c.fur} />
+      <ellipse cx="28" cy="27" rx="3" ry="2.5" fill={c.furShade} opacity="0.5" />
+      <ellipse cx="72" cy="27" rx="3" ry="2.5" fill={c.furShade} opacity="0.5" />
+      {/* head */}
+      <ellipse cx="50" cy="44" rx="34" ry="30" fill={c.fur} />
+      {/* light belly muzzle area */}
+      <ellipse cx="50" cy="58" rx="20" ry="13" fill={c.belly} opacity="0.7" />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
     </g>
   ),
+
+  // LOUTRE — playful, soft head with whiskers + headband
   loutre: (c, w) => (
     <g>
-      <GroundShadow />
-      <circle cx="30" cy="34" r="5" fill={c.fur} />
-      <circle cx="70" cy="34" r="5" fill={c.fur} />
-      <circle cx="30" cy="35" r="2.4" fill={c.furShade} opacity="0.5" />
-      <circle cx="70" cy="35" r="2.4" fill={c.furShade} opacity="0.5" />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="30" ry="28" fill={c.fur} />} />
-      <path
-        d="M22 58 L34 56 M22 62 L34 60 M78 58 L66 56 M78 62 L66 60"
-        stroke={c.furShade}
-        strokeWidth="0.8"
-        strokeLinecap="round"
-        opacity="0.5"
-      />
+      {/* ears */}
+      <circle cx="28" cy="28" r="6" fill={c.fur} />
+      <circle cx="72" cy="28" r="6" fill={c.fur} />
+      <circle cx="28" cy="29" r="2.8" fill={c.furShade} opacity="0.5" />
+      <circle cx="72" cy="29" r="2.8" fill={c.furShade} opacity="0.5" />
+      {/* head */}
+      <ellipse cx="50" cy="44" rx="32" ry="30" fill={c.fur} />
+      {/* belly muzzle */}
+      <ellipse cx="50" cy="58" rx="20" ry="14" fill={c.belly} opacity="0.75" />
       {/* headband */}
       <path
-        d="M22 32 Q50 24 78 32"
+        d="M22 28 Q50 18 78 28"
         stroke={w.cloth}
-        strokeWidth="3.5"
+        strokeWidth="4"
         strokeLinecap="round"
         fill="none"
       />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      <path
+        d="M22 30 Q50 20 78 30"
+        stroke={w.clothShade}
+        strokeWidth="1"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.5"
+      />
+      {/* whiskers */}
+      <path
+        d="M16 56 L32 54 M16 60 L32 58 M84 56 L68 54 M84 60 L68 58"
+        stroke={c.furShade}
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
     </g>
   ),
+
+  // RENARDE — pointed orange ears + scarf
   renarde: (c, w) => (
     <g>
-      <GroundShadow />
-      <path d="M28 14 L32 36 L42 30 Z" fill={c.fur} />
-      <path d="M72 14 L68 36 L58 30 Z" fill={c.fur} />
-      <path d="M30 18 L34 34 L40 30 Z" fill={c.furShade} opacity="0.45" />
-      <path d="M70 18 L66 34 L60 30 Z" fill={c.furShade} opacity="0.45" />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="30" ry="28" fill={c.fur} />} />
-      <path d="M50 56 Q40 66 50 72 Q60 66 50 56 Z" fill={c.belly} />
-      {/* scarf */}
+      {/* tall pointed ears */}
+      <path d="M22 12 L32 36 L44 28 Z" fill={c.fur} />
+      <path d="M78 12 L68 36 L56 28 Z" fill={c.fur} />
+      <path d="M26 18 L32 34 L40 30 Z" fill={c.furShade} opacity="0.45" />
+      <path d="M74 18 L68 34 L60 30 Z" fill={c.furShade} opacity="0.45" />
+      <ellipse cx="50" cy="44" rx="32" ry="30" fill={c.fur} />
+      {/* white blaze + muzzle */}
+      <path d="M50 44 Q38 54 50 70 Q62 54 50 44 Z" fill={c.belly} />
+      {/* scarf draped over neck */}
       <path
-        d="M28 70 Q50 80 72 70 L72 76 Q50 84 28 76 Z"
+        d="M22 76 Q50 86 78 76 L78 84 Q50 94 22 84 Z"
         fill={w.cloth}
       />
       <path
-        d="M28 76 L24 86 L34 80 Z"
+        d="M22 84 L18 96 L30 86 Z"
         fill={w.clothShade}
       />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
     </g>
   ),
+
+  // BICHE — small antlers + cardigan with collar + spots
   biche: (c, w) => (
     <g>
-      <GroundShadow />
+      {/* tiny antlers */}
       <path
-        d="M38 14 L36 6 M36 6 L32 4 M36 6 L38 2"
+        d="M38 12 L36 4 M36 4 L32 2 M36 4 L38 0"
         stroke={c.furShade}
-        strokeWidth="1.4"
+        strokeWidth="1.6"
         strokeLinecap="round"
         fill="none"
       />
       <path
-        d="M62 14 L64 6 M64 6 L68 4 M64 6 L62 2"
+        d="M62 12 L64 4 M64 4 L68 2 M64 4 L62 0"
         stroke={c.furShade}
-        strokeWidth="1.4"
+        strokeWidth="1.6"
         strokeLinecap="round"
         fill="none"
       />
-      <path d="M30 22 L38 12 L42 28 Z" fill={c.fur} />
-      <path d="M70 22 L62 12 L58 28 Z" fill={c.fur} />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="29" ry="28" fill={c.fur} />} />
-      <circle cx="34" cy="40" r="1.2" fill={c.belly} opacity="0.7" />
-      <circle cx="66" cy="40" r="1.2" fill={c.belly} opacity="0.7" />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      {/* delicate ears */}
+      <path d="M30 22 L40 8 L44 28 Z" fill={c.fur} />
+      <path d="M70 22 L60 8 L56 28 Z" fill={c.fur} />
+      <path d="M34 22 L40 12 L42 26 Z" fill="#fbe5d6" opacity="0.6" />
+      <path d="M66 22 L60 12 L58 26 Z" fill="#fbe5d6" opacity="0.6" />
+      {/* head */}
+      <ellipse cx="50" cy="44" rx="30" ry="29" fill={c.fur} />
+      <ellipse cx="50" cy="58" rx="20" ry="13" fill={c.belly} opacity="0.75" />
+      {/* white spots */}
+      <circle cx="32" cy="38" r="1.4" fill="#ffffff" opacity="0.7" />
+      <circle cx="68" cy="38" r="1.4" fill="#ffffff" opacity="0.7" />
+      <circle cx="38" cy="32" r="0.9" fill="#ffffff" opacity="0.6" />
+      <circle cx="62" cy="32" r="0.9" fill="#ffffff" opacity="0.6" />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
-      {/* peter pan collar over sweater */}
+      {/* peter-pan collar */}
       <path
-        d="M36 72 Q42 80 50 80 Q58 80 64 72 Q58 76 50 76 Q42 76 36 72 Z"
-        fill="#fff"
-        opacity="0.85"
+        d="M34 70 Q42 80 50 80 Q58 80 66 70 Q58 76 50 76 Q42 76 34 70 Z"
+        fill="#ffffff"
+        opacity="0.95"
       />
     </g>
   ),
+
+  // OURSE — round, cozy, big ears
   ourse: (c, w) => (
     <g>
-      <GroundShadow />
-      <circle cx="28" cy="28" r="8" fill={c.fur} />
-      <circle cx="72" cy="28" r="8" fill={c.fur} />
-      <circle cx="28" cy="29" r="4" fill={c.furShade} opacity="0.4" />
-      <circle cx="72" cy="29" r="4" fill={c.furShade} opacity="0.4" />
-      <HeadBase colors={c} headPath={<circle cx="50" cy="46" r="30" fill={c.fur} />} />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      {/* big round ears */}
+      <circle cx="24" cy="22" r="9" fill={c.fur} />
+      <circle cx="76" cy="22" r="9" fill={c.fur} />
+      <circle cx="24" cy="23" r="4.5" fill={c.furShade} opacity="0.45" />
+      <circle cx="76" cy="23" r="4.5" fill={c.furShade} opacity="0.45" />
+      {/* head */}
+      <circle cx="50" cy="44" r="32" fill={c.fur} />
+      <ellipse cx="50" cy="58" rx="20" ry="14" fill={c.belly} opacity="0.75" />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
-      {/* horizontal stripe on sweater */}
-      <path d="M22 86 L78 86" stroke={w.collar} strokeWidth="3" opacity="0.7" />
+      {/* horizontal cozy stripe */}
+      <path d="M14 90 L86 90" stroke={w.clothShade} strokeWidth="3.5" opacity="0.7" />
     </g>
   ),
+
+  // HIBOU — wide head, big white-ringed eyes, beak, vest
   hibou: (c, w) => (
     <g>
-      <GroundShadow />
-      <path d="M28 14 L36 28 L40 18 Z" fill={c.fur} />
-      <path d="M72 14 L64 28 L60 18 Z" fill={c.fur} />
-      <ellipse cx="50" cy="46" rx="32" ry="28" fill={c.fur} />
-      <ellipse cx="50" cy="56" rx="22" ry="18" fill={c.belly} opacity="0.85" />
-      <circle cx="38" cy="48" r="9" fill="#ffffff" />
-      <circle cx="62" cy="48" r="9" fill="#ffffff" />
-      <ellipse cx="38" cy="49" rx="4" ry="5" fill={c.inner} />
-      <ellipse cx="62" cy="49" rx="4" ry="5" fill={c.inner} />
-      <circle cx="36.5" cy="47" r="1.4" fill="#ffffff" />
-      <circle cx="60.5" cy="47" r="1.4" fill="#ffffff" />
-      <path d="M47 58 L50 64 L53 58 Z" fill="#c89c5b" />
+      {/* feather tufts */}
+      <path d="M22 10 L32 28 L40 16 Z" fill={c.fur} />
+      <path d="M78 10 L68 28 L60 16 Z" fill={c.fur} />
+      {/* head */}
+      <ellipse cx="50" cy="44" rx="34" ry="30" fill={c.fur} />
+      {/* face plate */}
+      <ellipse cx="50" cy="50" rx="24" ry="20" fill={c.belly} opacity="0.85" />
+      {/* big ringed eyes */}
+      <circle cx="38" cy="48" r="10" fill="#ffffff" />
+      <circle cx="62" cy="48" r="10" fill="#ffffff" />
+      <circle cx="38" cy="48" r="5" fill={c.inner} />
+      <circle cx="62" cy="48" r="5" fill={c.inner} />
+      <circle cx="36.5" cy="46" r="1.6" fill="#ffffff" />
+      <circle cx="60.5" cy="46" r="1.6" fill="#ffffff" />
+      {/* beak */}
+      <path d="M46 58 L50 66 L54 58 Z" fill="#d39855" />
       <Cheeks />
-      <Smile stroke={c.inner} />
       <Sweater clothes={w} />
-      {/* bow tie */}
-      <path d="M44 76 L50 80 L44 84 Z" fill={w.collar} />
-      <path d="M56 76 L50 80 L56 84 Z" fill={w.collar} />
-      <circle cx="50" cy="80" r="1.6" fill={w.cloth} />
+      {/* tiny bow tie */}
+      <path d="M44 78 L50 82 L44 86 Z" fill={w.clothShade} />
+      <path d="M56 78 L50 82 L56 86 Z" fill={w.clothShade} />
+      <circle cx="50" cy="82" r="1.6" fill={w.cloth} />
     </g>
   ),
+
+  // KOALA — huge fluffy side ears, big nose, gray
   koala: (c, w) => (
     <g>
-      <GroundShadow />
-      <circle cx="22" cy="36" r="11" fill={c.fur} />
-      <circle cx="78" cy="36" r="11" fill={c.fur} />
-      <circle cx="22" cy="38" r="6" fill={c.belly} opacity="0.7" />
-      <circle cx="78" cy="38" r="6" fill={c.belly} opacity="0.7" />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="28" ry="26" fill={c.fur} />} />
-      <ellipse cx="50" cy="58" rx="6" ry="5" fill={c.inner} />
-      <ellipse cx="48" cy="56.5" rx="1.6" ry="1" fill="#ffffff" opacity="0.5" />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      {/* huge fluffy side ears */}
+      <circle cx="18" cy="38" r="14" fill={c.fur} />
+      <circle cx="82" cy="38" r="14" fill={c.fur} />
+      <circle cx="18" cy="40" r="8" fill={c.belly} opacity="0.7" />
+      <circle cx="82" cy="40" r="8" fill={c.belly} opacity="0.7" />
+      {/* head */}
+      <ellipse cx="50" cy="46" rx="28" ry="26" fill={c.fur} />
+      <ellipse cx="50" cy="58" rx="18" ry="13" fill={c.belly} opacity="0.7" />
+      {/* big dark nose */}
+      <ellipse cx="50" cy="56" rx="7" ry="5.5" fill={c.inner} />
+      <ellipse cx="48" cy="54.5" rx="1.8" ry="1.1" fill="#ffffff" opacity="0.55" />
+      <SparkleEyes shade={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
-      {/* pyjama dots on sweater */}
-      <circle cx="34" cy="84" r="1.4" fill={w.collar} opacity="0.6" />
-      <circle cx="44" cy="90" r="1.4" fill={w.collar} opacity="0.6" />
-      <circle cx="56" cy="84" r="1.4" fill={w.collar} opacity="0.6" />
-      <circle cx="66" cy="90" r="1.4" fill={w.collar} opacity="0.6" />
+      {/* pyjama dots */}
+      <circle cx="30" cy="84" r="1.6" fill={w.clothShade} opacity="0.65" />
+      <circle cx="42" cy="92" r="1.6" fill={w.clothShade} opacity="0.65" />
+      <circle cx="58" cy="84" r="1.6" fill={w.clothShade} opacity="0.65" />
+      <circle cx="70" cy="92" r="1.6" fill={w.clothShade} opacity="0.65" />
     </g>
   ),
+
+  // LOUVE — pointed ears, slate gray, mask, jacket
   louve: (c, w) => (
     <g>
-      <GroundShadow />
-      <path d="M28 12 L34 34 L42 28 Z" fill={c.fur} />
-      <path d="M72 12 L66 34 L58 28 Z" fill={c.fur} />
-      <path d="M30 16 L34 32 L40 28 Z" fill={c.furShade} opacity="0.4" />
-      <path d="M70 16 L66 32 L60 28 Z" fill={c.furShade} opacity="0.4" />
-      <HeadBase colors={c} headPath={<ellipse cx="50" cy="46" rx="30" ry="28" fill={c.fur} />} />
+      {/* pointed ears */}
+      <path d="M22 8 L32 32 L42 26 Z" fill={c.fur} />
+      <path d="M78 8 L68 32 L58 26 Z" fill={c.fur} />
+      <path d="M26 14 L32 30 L38 28 Z" fill={c.furShade} opacity="0.45" />
+      <path d="M74 14 L68 30 L62 28 Z" fill={c.furShade} opacity="0.45" />
+      {/* head */}
+      <ellipse cx="50" cy="44" rx="32" ry="30" fill={c.fur} />
+      <ellipse cx="50" cy="58" rx="20" ry="14" fill={c.belly} opacity="0.7" />
+      {/* darker mask */}
       <path
-        d="M30 44 Q50 32 70 44 Q70 54 50 58 Q30 54 30 44 Z"
+        d="M22 40 Q50 26 78 40 Q78 52 50 56 Q22 52 22 40 Z"
         fill={c.furShade}
-        opacity="0.32"
+        opacity="0.4"
       />
-      <Cheeks />
-      <Eyes shade={c.inner} />
+      <SparkleEyes shade={c.inner} />
       <Nose fill={c.inner} />
       <Smile stroke={c.inner} />
+      <Cheeks />
       <Sweater clothes={w} />
       {/* turtleneck collar */}
       <path
-        d="M30 70 Q50 76 70 70 L70 76 Q50 82 30 76 Z"
+        d="M28 70 Q50 78 72 70 L72 78 Q50 86 28 78 Z"
         fill={w.clothShade}
       />
     </g>

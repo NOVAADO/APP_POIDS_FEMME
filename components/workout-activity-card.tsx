@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { Equipment, Exercise, ExerciseIllustration, WorkoutActivity } from "@/lib/types";
+import type { Equipment, Exercise, WorkoutActivity } from "@/lib/types";
 import { equipmentLabel, exerciseCategoryLabel } from "@/lib/labels";
 import { Badge } from "./ui/badge";
+import { ExerciseIllustration } from "./exercise-illustration";
 
 type Variant = "soft" | "standard" | "progression";
 
@@ -11,13 +12,6 @@ const variantLabel: Record<Variant, string> = {
   soft: "Douce",
   standard: "Standard",
   progression: "Progression",
-};
-
-const accentClasses: Record<NonNullable<ExerciseIllustration["accent"]>, string> = {
-  moss: "bg-moss-50 text-moss-600",
-  sand: "bg-cream-100 text-sand-600",
-  cream: "bg-cream-100 text-ink-700",
-  warm: "bg-amber-50 text-amber-700",
 };
 
 type WorkoutActivityCardProps = {
@@ -39,7 +33,6 @@ export function WorkoutActivityCard({
 
   const showableEquipment = exercise.requiredEquipment.filter((e) => e !== "none");
   const hasMissing = missingEquipment.length > 0;
-  const illustration = exercise.illustration ?? { emoji: "💪", accent: "moss" };
   const metric = activity.duration
     ? activity.duration
     : `${activity.sets ?? exercise.sets ?? 0} × ${activity.reps ?? exercise.reps ?? "—"}`;
@@ -51,14 +44,7 @@ export function WorkoutActivityCard({
       }`}
     >
       <div className="flex items-stretch">
-        <div
-          aria-hidden
-          className={`flex w-24 shrink-0 items-center justify-center text-4xl ${
-            accentClasses[illustration.accent]
-          }`}
-        >
-          {illustration.emoji}
-        </div>
+        <ExerciseIllustration exerciseId={exercise.id} size="card" />
 
         <div className="min-w-0 flex-1 p-4">
           <div className="flex items-start justify-between gap-3">

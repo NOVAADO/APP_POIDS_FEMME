@@ -5,13 +5,13 @@ import type {
   FoodFilter,
   FoodStructurePreference,
   HormonalStage,
-  MascotAccent,
   MascotAnimal,
   NeuroProfile,
   StoreId,
   UserProfile,
 } from "@/lib/types";
 import { mascots } from "@/data/mascots";
+import { MascotAvatar } from "./mascot-avatar";
 import {
   breakfastPreferenceOptions,
   cookingCapacityOptions,
@@ -180,14 +180,6 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
   );
 }
 
-const accentClasses: Record<MascotAccent, string> = {
-  moss: "bg-moss-500/15 text-moss-600",
-  sand: "bg-sand-400/25 text-sand-600",
-  cream: "bg-cream-200 text-ink-700",
-  warm: "bg-amber-100 text-amber-800",
-  rose: "bg-rose-100 text-rose-700",
-};
-
 type MascotPickerProps = {
   selectedId: MascotAnimal;
   onSelect: (id: MascotAnimal) => void;
@@ -210,15 +202,8 @@ function MascotPicker({ selectedId, onSelect }: MascotPickerProps) {
                 : "border-cream-200 hover:bg-cream-100"
             }`}
           >
-            <div className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className={`flex h-10 w-10 items-center justify-center rounded-soft text-2xl ${
-                  accentClasses[m.accent]
-                }`}
-              >
-                {m.emoji}
-              </span>
+            <div className="flex items-center gap-3">
+              <MascotAvatar mascot={m} size="sm" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-ink-900">{m.name}</p>
                 <p className="truncate text-[11px] text-sand-600">{m.energy}</p>

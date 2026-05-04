@@ -10,31 +10,31 @@ type Palette = {
 
 const PALETTES = {
   moss: {
-    bg: "#e8efe0",
-    body: "#7a8a6b",
-    bodyShade: "#566649",
-    prop: "#cdb795",
-    propShade: "#9b8865",
+    bg: "#eef4e6",
+    body: "#8a9a78",
+    bodyShade: "#5e6e52",
+    prop: "#dcc8a8",
+    propShade: "#a89776",
   },
   sand: {
-    bg: "#f4ead4",
-    body: "#a89776",
+    bg: "#f7eed9",
+    body: "#b4a07e",
     bodyShade: "#7a6c54",
     prop: "#d3754a",
     propShade: "#9c4d29",
   },
   cream: {
-    bg: "#faf2e1",
-    body: "#a89776",
+    bg: "#fbf3e2",
+    body: "#b4a07e",
     bodyShade: "#7a6c54",
-    prop: "#cebb96",
-    propShade: "#9b8865",
+    prop: "#dcc8a8",
+    propShade: "#a89776",
   },
   warm: {
-    bg: "#fcdfc1",
-    body: "#c66a3d",
-    bodyShade: "#8d4a28",
-    prop: "#a89776",
+    bg: "#fde6cd",
+    body: "#d97a3a",
+    bodyShade: "#9c4d29",
+    prop: "#b4a07e",
     propShade: "#7a6c54",
   },
 } as const;
@@ -52,8 +52,20 @@ const PALETTE_BY_EXERCISE: Record<string, Accent> = {
   "marche-post-repas": "moss",
 };
 
-function Head({ p, cx, cy, r = 5 }: { p: Palette; cx: number; cy: number; r?: number }) {
-  return <circle cx={cx} cy={cy} r={r} fill={p.bodyShade} />;
+function Head({ p, cx, cy, r = 6.5 }: { p: Palette; cx: number; cy: number; r?: number }) {
+  return (
+    <g>
+      <circle cx={cx} cy={cy} r={r} fill={p.bodyShade} />
+      {/* small highlight to soften */}
+      <circle
+        cx={cx - r * 0.35}
+        cy={cy - r * 0.35}
+        r={r * 0.25}
+        fill="#ffffff"
+        opacity="0.35"
+      />
+    </g>
+  );
 }
 
 function squatChaise(p: Palette): ReactElement {
@@ -411,8 +423,15 @@ function genericRenderer(p: Palette): ReactElement {
 
 type ExerciseIllustrationProps = {
   exerciseId: string;
-  size?: "card" | "library";
+  size?: "card" | "library" | "banner" | "detail";
   className?: string;
+};
+
+const SIZE_CLASS: Record<NonNullable<ExerciseIllustrationProps["size"]>, string> = {
+  card: "h-full w-24",
+  library: "h-full w-20",
+  banner: "h-32 w-full",
+  detail: "h-44 w-full",
 };
 
 export function ExerciseIllustration({
@@ -423,16 +442,20 @@ export function ExerciseIllustration({
   const accent = PALETTE_BY_EXERCISE[exerciseId] ?? "moss";
   const palette = PALETTES[accent];
   const renderer = RENDERERS[exerciseId] ?? genericRenderer;
-  const sizeClass = size === "card" ? "h-full w-24" : "h-full w-20";
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center ${sizeClass} ${className}`}
+      className={`flex shrink-0 items-center justify-center ${SIZE_CLASS[size]} ${className}`}
       style={{ backgroundColor: palette.bg }}
       role="presentation"
       aria-hidden
     >
-      <svg viewBox="0 0 100 80" className="h-full w-full" preserveAspectRatio="xMidYMid meet">
+      <svg
+        viewBox="0 0 100 80"
+        className="h-full w-full"
+        preserveAspectRatio="xMidYMid meet"
+        strokeLinejoin="round"
+      >
         {renderer(palette)}
       </svg>
     </div>

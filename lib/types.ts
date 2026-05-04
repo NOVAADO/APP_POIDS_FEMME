@@ -122,6 +122,7 @@ export type Exercise = {
   };
   alternatives?: string[];
   visualKey: string;
+  supportNote?: string;
 };
 
 export type WorkoutActivity = {

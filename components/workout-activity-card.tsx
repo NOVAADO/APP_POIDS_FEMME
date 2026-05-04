@@ -94,7 +94,7 @@ export function WorkoutActivityCard({
               </Badge>
             ))
           )}
-          {hasMissing ? <Badge tone="warn">Accessoire manquant</Badge> : null}
+          {hasMissing ? <Badge tone="warn">Alternative à prévoir</Badge> : null}
         </div>
 
         {exercise.targetZones.length > 0 ? (

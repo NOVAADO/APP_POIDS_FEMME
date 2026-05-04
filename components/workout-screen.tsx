@@ -24,6 +24,7 @@ import { ToggleGroup } from "./ui/toggle-group";
 import { MascotCard } from "./mascot-card";
 import { WorkoutActivityCard } from "./workout-activity-card";
 import { WorkoutTimer } from "./workout-timer";
+import { ExerciseIllustration } from "./exercise-illustration";
 
 type WorkoutScreenProps = {
   plan: DailyWorkoutPlan;
@@ -142,13 +143,6 @@ export function WorkoutScreen({
   );
 }
 
-const libraryAccent: Record<"moss" | "sand" | "cream" | "warm", string> = {
-  moss: "bg-moss-50 text-moss-600",
-  sand: "bg-cream-100 text-sand-600",
-  cream: "bg-cream-100 text-ink-700",
-  warm: "bg-amber-50 text-amber-700",
-};
-
 function ExerciseLibrary({ profile }: { profile: UserProfile }) {
   return (
     <section className="space-y-3">
@@ -162,21 +156,13 @@ function ExerciseLibrary({ profile }: { profile: UserProfile }) {
         {allExercises.map((exercise) => {
           const compatible = isExerciseCompatible(exercise, profile.availableEquipment);
           const showableEquipment = exercise.requiredEquipment.filter((e) => e !== "none");
-          const illustration = exercise.illustration ?? { emoji: "💪", accent: "moss" as const };
           return (
             <article
               key={exercise.id}
               className="overflow-hidden rounded-soft bg-white shadow-soft"
             >
               <div className="flex items-stretch">
-                <div
-                  aria-hidden
-                  className={`flex w-20 shrink-0 items-center justify-center text-3xl ${
-                    libraryAccent[illustration.accent]
-                  }`}
-                >
-                  {illustration.emoji}
-                </div>
+                <ExerciseIllustration exerciseId={exercise.id} size="library" />
                 <div className="min-w-0 flex-1 space-y-1.5 p-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">

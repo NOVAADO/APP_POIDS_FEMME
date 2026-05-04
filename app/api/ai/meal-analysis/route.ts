@@ -1,3 +1,8 @@
+// Public API endpoint — no authentication required at this stage.
+// IMPORTANT: before any wide release, add a real rate limit (per-IP or per-session)
+// at the edge (Vercel Middleware, Upstash Ratelimit, or similar) to bound cost
+// and abuse. The light caps in this file (size + max_tokens) are not a substitute.
+
 import { NextResponse } from "next/server";
 import type {
   MealAnalysisErrorPayload,
@@ -6,6 +11,10 @@ import type {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const MIN_MEAL_LENGTH = 3;
+const MAX_MEAL_LENGTH = 800;
+const MAX_RESPONSE_TOKENS = 600;
 
 const SYSTEM_PROMPT = `Tu es l’agent “Analyse douce du repas” d’une application destinée aux femmes en préménopause, périménopause et ménopause, avec surplus de poids possible, résistance à l’insuline possible, charge mentale élevée et profils neurodivergents.
 
@@ -82,6 +91,21 @@ const RESPONSE_SCHEMA = {
   ],
 } as const;
 
+// Light heuristic to gently steer the user away from sharing medical / very
+// personal data. False positives are fine here: if the text mentions medication,
+// blood-test values, body shame or weight, we ask for a meal-only description.
+const SENSITIVE_PATTERNS: RegExp[] = [
+  /\b(diab(ète|etique|étique)|hba1c|glyc(é|e)mie\s*\d|insuline\s*(rapide|lente|injection|piqu)|metformine|ozempic|wegovy|saxenda)\b/i,
+  /\b(antidépr|antidepress|antibiotique|chimio|cortisone|cortisol\s*\d)\b/i,
+  /\b(\d+\s*(kg|lb|livres)\b|imc\s*\d|tour\s*de\s*taille\s*\d|poids\s*\d{2,})\b/i,
+  /\b(diagnos(tic|tique)|pathologie|cancer|tumeur|opération|chirurgie)\b/i,
+  /\b(je\s+(d(é|e)teste|m(é|e)prise)\s+mon\s+corps|haine\s+de\s+moi|envie\s+de\s+disparaitre|envie\s+de\s+disparaître)\b/i,
+];
+
+function looksMedicalOrSensitive(text: string): boolean {
+  return SENSITIVE_PATTERNS.some((re) => re.test(text));
+}
+
 function errorPayload(
   status: number,
   code: MealAnalysisErrorPayload["code"],
@@ -139,8 +163,27 @@ export async function POST(request: Request) {
       "Écris quelques mots sur ton repas avant de lancer l’analyse.",
     );
   }
-  if (mealText.length > 2000) {
-    mealText = mealText.slice(0, 2000);
+  if (mealText.length < MIN_MEAL_LENGTH) {
+    return errorPayload(
+      400,
+      "text_too_short",
+      "Quelques mots de plus aideraient l’analyse. Décris simplement les aliments du repas.",
+    );
+  }
+  if (mealText.length > MAX_MEAL_LENGTH) {
+    return errorPayload(
+      400,
+      "text_too_long",
+      "Le texte est un peu long pour cette analyse. Essaie avec une description plus courte du repas.",
+    );
+  }
+
+  if (looksMedicalOrSensitive(mealText)) {
+    return errorPayload(
+      400,
+      "sensitive_content",
+      "Pour ta vie privée, évite d’écrire des informations médicales sensibles ici. Tu peux décrire seulement les aliments du repas.",
+    );
   }
 
   let upstream: Response;
@@ -154,6 +197,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
         temperature: 0.4,
+        max_tokens: MAX_RESPONSE_TOKENS,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: `Voici le repas à analyser doucement :\n${mealText}` },

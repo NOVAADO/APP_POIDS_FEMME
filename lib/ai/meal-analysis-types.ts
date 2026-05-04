@@ -17,6 +17,9 @@ export type MealAnalysisResult = {
 
 export type MealAnalysisErrorCode =
   | "missing_meal"
+  | "text_too_short"
+  | "text_too_long"
+  | "sensitive_content"
   | "no_api_key"
   | "upstream_error"
   | "invalid_response";

@@ -1,24 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import type { FoodStructurePreference, Recipe } from "@/lib/types";
+import type { FoodStructurePreference, Recipe, RecipeTag } from "@/lib/types";
 import { mealTypeLabel } from "@/lib/labels";
 import { getMealStructureSummary, scaleIngredients } from "@/lib/recipes";
+import { formatHumanQuantity } from "@/lib/format";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 
 const tagLabel: Record<string, string> = {
   glycemic_stable: "Glycémie stable",
-  high_protein: "Riche en protéines",
+  high_protein: "Protéiné",
   high_fiber: "Riche en fibres",
-  salty_breakfast: "Déjeuner salé",
+  salty_breakfast: "Salé",
   soft_sweet: "Sucré doux",
   quick: "Rapide",
   family_friendly: "Famille",
   freezer_friendly: "Congélation",
-  low_prep: "Peu de préparation",
-  lunchbox: "Boîte à lunch",
+  low_prep: "Peu de prép.",
+  lunchbox: "Lunch",
 };
+
+const PRIORITY_TAGS: RecipeTag[] = [
+  "quick",
+  "family_friendly",
+  "low_prep",
+  "lunchbox",
+  "high_protein",
+  "freezer_friendly",
+];
+
+function pickPriorityTag(tags: RecipeTag[]): RecipeTag | null {
+  for (const tag of PRIORITY_TAGS) {
+    if (tags.includes(tag)) return tag;
+  }
+  return tags[0] ?? null;
+}
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -42,53 +59,57 @@ export function RecipeCard({
   const structureSummary = showStructure
     ? getMealStructureSummary(recipe, structurePreference === "precise")
     : [];
+  const compatLabel = hiddenByDefault
+    ? "Affichée en mode complet"
+    : compatible
+    ? "Convient à ton profil"
+    : "À vérifier selon ton profil";
+  const priorityTag = pickPriorityTag(recipe.tags);
+  const supportNote = recipe.supportNote ?? "Repas simple à ajouter à ta semaine.";
 
   return (
     <Card className="space-y-3">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-xs uppercase tracking-wide text-sand-600">
-            {mealTypeLabel[recipe.mealType]}
-          </p>
-          <h3 className="mt-0.5 text-base font-medium text-ink-900">{recipe.title}</h3>
-        </div>
-        {compatible ? (
-          <Badge tone="moss">Compatible</Badge>
-        ) : (
-          <Badge tone="warn">Visible en mode complet</Badge>
-        )}
-      </div>
+      <p className="text-xs text-sand-600">
+        {mealTypeLabel[recipe.mealType]} · {compatLabel}
+      </p>
+
+      <h3 className="text-lg font-semibold text-ink-900">{recipe.title}</h3>
 
       <div className="flex flex-wrap gap-1.5 text-xs">
         <Badge tone="neutral">{recipe.prepTimeMinutes} min</Badge>
-        <Badge tone="neutral">{effectiveServings} portion{effectiveServings > 1 ? "s" : ""}</Badge>
-        {recipe.tags.slice(0, 3).map((tag) => (
-          <Badge key={tag} tone="sand">
-            {tagLabel[tag] ?? tag}
-          </Badge>
-        ))}
+        <Badge tone="neutral">
+          {effectiveServings} portion{effectiveServings > 1 ? "s" : ""}
+        </Badge>
+        {priorityTag ? (
+          <Badge tone="sand">{tagLabel[priorityTag] ?? priorityTag}</Badge>
+        ) : null}
       </div>
+
+      <p className="text-sm text-ink-700">{supportNote}</p>
 
       {hiddenByDefault ? (
         <p className="text-xs text-sand-600">
-          Cette recette est masquée par défaut selon ton profil. Tu la vois parce que tu as activé
-          « Voir toutes les recettes ».
+          Tu la vois parce que tu as activé « Voir toutes les recettes ».
         </p>
       ) : null}
 
       {structureSummary.length > 0 ? (
-        <div>
-          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
-            Repères du repas
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {structureSummary.map((label) => (
-              <Badge key={label} tone="moss">
-                {label}
-              </Badge>
-            ))}
+        structurePreference === "precise" ? (
+          <div>
+            <p className="mb-1 text-xs text-sand-600">Structure du repas</p>
+            <div className="flex flex-wrap gap-1.5">
+              {structureSummary.map((label) => (
+                <Badge key={label} tone="moss">
+                  {label}
+                </Badge>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="text-xs text-sand-600">
+            Équilibre : {structureSummary.join(" + ").toLowerCase()}.
+          </p>
+        )
       ) : null}
 
       <button
@@ -97,23 +118,33 @@ export function RecipeCard({
         aria-expanded={expanded}
         className="text-sm font-medium text-moss-600 hover:underline"
       >
-        {expanded ? "Masquer les ingrédients" : "Voir les ingrédients"}
+        {expanded ? "Masquer la recette" : "Voir la recette"}
       </button>
 
       {expanded ? (
         <div className="space-y-3 border-t border-cream-200 pt-3">
-          <ul className="space-y-1 text-sm text-ink-700">
-            {ingredients.map((ing) => (
-              <li key={ing.id}>
-                {ing.name} — {ing.quantity} {ing.unit}
-              </li>
-            ))}
-          </ul>
-          <ol className="list-decimal space-y-1 pl-5 text-sm text-ink-700">
-            {recipe.steps.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
+          <div>
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
+              Ingrédients
+            </p>
+            <ul className="space-y-1 text-sm text-ink-700">
+              {ingredients.map((ing) => (
+                <li key={ing.id}>
+                  {ing.name} — {formatHumanQuantity(ing.quantity, ing.unit)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
+              Étapes
+            </p>
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-ink-700">
+              {recipe.steps.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ol>
+          </div>
         </div>
       ) : null}
     </Card>

@@ -22,6 +22,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["egg_free"],
     recommendedFor: ["sci"],
     foodStructure: { protein: true, vegetables: true, fat: true },
+    supportNote: "Déjeuner salé, rassasiant, doux pour la glycémie.",
   },
   {
     id: "yogourt-grec-fruits",
@@ -39,6 +40,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["lactose_free", "no_bovine"],
     recommendedFor: [],
     foodStructure: { protein: true, fruit: true, fat: true },
+    supportNote: "Option rapide quand le matin est court.",
   },
   {
     id: "tofu-brouille",
@@ -61,6 +63,7 @@ export const recipes: Recipe[] = [
     excludedFor: [],
     recommendedFor: ["vegetarian", "lactose_free", "no_bovine"],
     foodStructure: { protein: true, vegetables: true, fat: true },
+    supportNote: "Déjeuner salé sans œufs, doux et nourrissant.",
   },
   {
     id: "bol-poulet-quinoa",
@@ -84,6 +87,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["vegetarian"],
     recommendedFor: ["lactose_free"],
     foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
+    supportNote: "Pratique pour les lunchs de la semaine.",
   },
   {
     id: "soupe-lentilles",
@@ -102,6 +106,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["sci"],
     recommendedFor: ["vegetarian", "lactose_free"],
     foodStructure: { protein: true, vegetables: true, grainOrStarch: true },
+    supportNote: "À congeler en portions, soutenant pour les semaines chargées.",
   },
   {
     id: "wrap-poulet",
@@ -120,6 +125,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["gluten_free"],
     recommendedFor: ["lactose_free"],
     foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
+    supportNote: "Option rapide quand l’énergie est basse.",
   },
   {
     id: "saumon-pdt-brocoli",
@@ -142,6 +148,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["vegetarian"],
     recommendedFor: ["lactose_free", "gluten_free"],
     foodStructure: { protein: true, vegetables: true, grainOrStarch: true, fat: true },
+    supportNote: "Simple pour un souper de semaine.",
   },
   {
     id: "chili-lentilles",
@@ -160,6 +167,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["sci", "reflux"],
     recommendedFor: ["vegetarian"],
     foodStructure: { protein: true, vegetables: true },
+    supportNote: "Doux et rassasiant, parfait à congeler en parts.",
   },
   {
     id: "omelette-repas",
@@ -177,6 +185,7 @@ export const recipes: Recipe[] = [
     excludedFor: ["egg_free"],
     recommendedFor: ["gluten_free"],
     foodStructure: { protein: true, vegetables: true, fat: true },
+    supportNote: "Souper rapide quand le frigo est presque vide.",
   },
   {
     id: "houmous-legumes",
@@ -194,5 +203,6 @@ export const recipes: Recipe[] = [
     excludedFor: [],
     recommendedFor: ["vegetarian", "lactose_free"],
     foodStructure: { protein: true, vegetables: true, fat: true },
+    supportNote: "Collation pratique entre deux activités.",
   },
 ];

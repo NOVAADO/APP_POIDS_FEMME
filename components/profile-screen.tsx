@@ -5,6 +5,7 @@ import type {
   FoodFilter,
   FoodStructurePreference,
   HormonalStage,
+  MascotAccent,
   MascotAnimal,
   NeuroProfile,
   StoreId,
@@ -35,8 +36,6 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
   function update<K extends keyof UserProfile>(key: K, value: UserProfile[K]) {
     onChange({ ...profile, [key]: value });
   }
-
-  const mascotOptions = mascots.map((m) => ({ value: m.id, label: m.name, emoji: m.emoji }));
 
   return (
     <div className="space-y-5">
@@ -155,19 +154,13 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
       </Card>
 
       <Card>
-        <SectionTitle hint="Choisis la présence qui te convient aujourd’hui.">
+        <SectionTitle hint="Une compagne, pas un coach. Tu peux changer en tout temps.">
           Mascotte-compagnon
         </SectionTitle>
-        <ToggleGroup<MascotAnimal>
-          mode="single"
-          options={mascotOptions}
-          value={profile.mascotId}
-          onChange={(v) => update("mascotId", v)}
+        <MascotPicker
+          selectedId={profile.mascotId}
+          onSelect={(id) => update("mascotId", id)}
         />
-        <p className="mt-3 text-sm text-sand-600">
-          Sélection actuelle&nbsp;:{" "}
-          {mascots.find((m) => m.id === profile.mascotId)?.name ?? "—"}.
-        </p>
       </Card>
 
       <Card>
@@ -187,3 +180,54 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
   );
 }
 
+const accentClasses: Record<MascotAccent, string> = {
+  moss: "bg-moss-500/15 text-moss-600",
+  sand: "bg-sand-400/25 text-sand-600",
+  cream: "bg-cream-200 text-ink-700",
+  warm: "bg-amber-100 text-amber-800",
+  rose: "bg-rose-100 text-rose-700",
+};
+
+type MascotPickerProps = {
+  selectedId: MascotAnimal;
+  onSelect: (id: MascotAnimal) => void;
+};
+
+function MascotPicker({ selectedId, onSelect }: MascotPickerProps) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {mascots.map((m) => {
+        const active = m.id === selectedId;
+        return (
+          <button
+            key={m.id}
+            type="button"
+            onClick={() => onSelect(m.id)}
+            aria-pressed={active}
+            className={`flex flex-col items-start gap-2 rounded-soft border bg-white p-3 text-left transition-colors ${
+              active
+                ? "border-moss-500 bg-moss-500/5"
+                : "border-cream-200 hover:bg-cream-100"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className={`flex h-10 w-10 items-center justify-center rounded-soft text-2xl ${
+                  accentClasses[m.accent]
+                }`}
+              >
+                {m.emoji}
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-ink-900">{m.name}</p>
+                <p className="truncate text-[11px] text-sand-600">{m.energy}</p>
+              </div>
+            </div>
+            <p className="text-[11px] text-sand-600">{m.description}</p>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

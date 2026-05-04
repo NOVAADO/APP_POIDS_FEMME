@@ -69,12 +69,17 @@ export type MascotContext =
   | "sleep"
   | "restart";
 
+export type MascotAccent = "moss" | "sand" | "cream" | "warm" | "rose";
+
 export type MascotProfile = {
   id: MascotAnimal;
   name: string;
   energy: string;
   description: string;
   wardrobe: string;
+  bodyStyle: string;
+  supportTone: string;
+  accent: MascotAccent;
   defaultMood: MascotMood;
   messages: Partial<Record<MascotContext, string[]>>;
   imageKey: string;
@@ -99,6 +104,11 @@ export type AdaptationTag =
   | "low_time"
   | "body_shame";
 
+export type ExerciseIllustration = {
+  emoji: string;
+  accent: "moss" | "sand" | "cream" | "warm";
+};
+
 export type Exercise = {
   id: string;
   name: string;
@@ -117,6 +127,7 @@ export type Exercise = {
   };
   alternatives?: string[];
   visualKey: string;
+  illustration?: ExerciseIllustration;
 };
 
 export type WorkoutActivity = {
@@ -193,6 +204,7 @@ export type Recipe = {
   excludedFor: FoodFilter[];
   recommendedFor: FoodFilter[];
   foodStructure?: FoodStructure;
+  supportNote?: string;
   notes?: string;
   imageKey?: string;
 };

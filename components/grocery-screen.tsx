@@ -43,7 +43,7 @@ export function GroceryScreen({
       <header>
         <h1 className="text-2xl font-semibold text-ink-900">Épicerie</h1>
         <p className="mt-1 text-sm text-sand-600">
-          La liste est prête à partager. Les quantités s’ajustent automatiquement.
+          On simplifie. La liste est prête à partager.
         </p>
       </header>
 

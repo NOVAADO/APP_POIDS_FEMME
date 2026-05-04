@@ -165,6 +165,15 @@ export function AppShell() {
     });
   }
 
+  function handleCopyDayMeal(sourceDay: DayKey, targetDay: DayKey, mealType: MealType) {
+    setMealPlan((prev) => {
+      const source = prev.days[sourceDay][mealType];
+      if (!source) return prev;
+      const target = { ...prev.days[targetDay], [mealType]: { ...source } };
+      return { ...prev, days: { ...prev.days, [targetDay]: target } };
+    });
+  }
+
   function handleResetWeek() {
     setMealPlan(makeDefaultMealPlan());
     setGroceryChecks({});
@@ -228,6 +237,7 @@ export function AppShell() {
             onToggleShowAll={() => setShowAllRecipes((v) => !v)}
             onChangeRecipe={handleChangeRecipe}
             onChangeServings={handleChangeServings}
+            onCopyDayMeal={handleCopyDayMeal}
             onResetWeek={handleResetWeek}
           />
         )}

@@ -12,7 +12,7 @@ import type {
 } from "@/lib/types";
 import { formatLongDate, getCurrentDayKey } from "@/lib/dates";
 import { mealTypeLabel } from "@/lib/labels";
-import { formatQuantity } from "@/lib/format";
+import { formatGroceryItemName } from "@/lib/format";
 import { getRecipeById } from "@/lib/recipes";
 import { getWorkoutCompletion } from "@/lib/workouts";
 import { Card } from "./ui/card";
@@ -69,7 +69,7 @@ export function TodayScreen({
         </p>
       </header>
 
-      <MascotCard mascot={mascot} context="home" />
+      <MascotCard mascot={mascot} context="home" variant="rich" />
 
       <section>
         <SectionTitle hint={`${energyLabel}${shortMode ? " · version courte active" : ""}`}>
@@ -146,7 +146,7 @@ export function TodayScreen({
             <ul className="space-y-1 text-sm text-ink-700">
               {remainingItems.map((item) => (
                 <li key={item.key}>
-                  □ {item.name} — {formatQuantity(item)}
+                  □ {formatGroceryItemName(item)}
                 </li>
               ))}
             </ul>

@@ -7,9 +7,40 @@ import type {
   WeeklyMealPlan,
 } from "./types";
 import { groceryCategoryLabel, groceryCategoryOrder, storeLabel } from "./labels";
-import { formatQuantity, formatGroceryStatus, round1 } from "./format";
+import {
+  formatGroceryItemName,
+  formatGroceryStatus,
+  formatHumanQuantity,
+  round1,
+} from "./format";
 
 export type GroceryCheckMap = Record<string, { inPantry?: boolean; purchased?: boolean }>;
+
+const VOLUME_TO_TBSP: Record<string, number> = {
+  "c. à thé": 1 / 3,
+  "c. à soupe": 1,
+  tasse: 16,
+};
+
+const VOLUME_CANONICAL: Record<string, string> = {
+  "c. à thé": "tasse",
+  "c. à soupe": "tasse",
+  tasse: "tasse",
+};
+
+function canonicalUnitKey(ingredientId: string, unit: string): string {
+  const canonical = VOLUME_CANONICAL[unit];
+  if (canonical) return `${ingredientId}-${canonical}`;
+  return `${ingredientId}-${unit}`;
+}
+
+function toCanonicalQuantity(unit: string, quantity: number): { quantity: number; unit: string } {
+  if (VOLUME_CANONICAL[unit] === "tasse") {
+    const tbsp = quantity * VOLUME_TO_TBSP[unit];
+    return { quantity: round1(tbsp / 16), unit: "tasse" };
+  }
+  return { quantity: round1(quantity), unit };
+}
 
 function dealMatches(deal: FlyerDeal, ingredientName: string, aliases: string[] = []): boolean {
   const normalized = deal.normalizedIngredientName.toLowerCase();
@@ -36,7 +67,13 @@ export function buildGroceryList(
       const multiplier = plannedMeal.servings / safeBase;
 
       recipe.ingredients.forEach((ingredient) => {
-        const key = `${ingredient.id}-${ingredient.unit}`;
+        const rawAdded = ingredient.quantity * multiplier;
+        const { quantity: addedQuantity, unit: addedUnit } = toCanonicalQuantity(
+          ingredient.unit,
+          rawAdded,
+        );
+        const key = canonicalUnitKey(ingredient.id, ingredient.unit);
+
         const matchingDeals = deals.filter(
           (deal) =>
             enabledStores.includes(deal.storeId) &&
@@ -44,7 +81,6 @@ export function buildGroceryList(
         );
 
         const existing = map.get(key);
-        const addedQuantity = ingredient.quantity * multiplier;
 
         if (existing) {
           existing.quantity = round1(existing.quantity + addedQuantity);
@@ -61,7 +97,7 @@ export function buildGroceryList(
             ingredientId: ingredient.id,
             name: ingredient.name,
             quantity: round1(addedQuantity),
-            unit: ingredient.unit,
+            unit: addedUnit,
             category: ingredient.category,
             inPantry: groceryChecks[key]?.inPantry ?? false,
             purchased: groceryChecks[key]?.purchased ?? false,
@@ -114,7 +150,7 @@ export function buildGroceryShareText(items: GroceryItem[]): string {
   groups.forEach(({ category, items: categoryItems }) => {
     lines.push(groceryCategoryLabel[category]);
     categoryItems.forEach((item) => {
-      lines.push(`□ ${item.name} — ${formatQuantity(item)} — ${formatGroceryStatus(item)}`);
+      lines.push(`□ ${formatGroceryItemName(item)} — ${formatGroceryStatus(item)}`);
     });
     lines.push("");
   });

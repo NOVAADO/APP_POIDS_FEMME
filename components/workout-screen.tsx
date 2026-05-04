@@ -141,6 +141,13 @@ export function WorkoutScreen({
   );
 }
 
+const libraryAccent: Record<"moss" | "sand" | "cream" | "warm", string> = {
+  moss: "bg-moss-500/15 text-moss-600",
+  sand: "bg-sand-400/25 text-sand-600",
+  cream: "bg-cream-200 text-ink-700",
+  warm: "bg-amber-100 text-amber-800",
+};
+
 function ExerciseLibrary({ profile }: { profile: UserProfile }) {
   return (
     <section className="space-y-3">
@@ -151,30 +158,49 @@ function ExerciseLibrary({ profile }: { profile: UserProfile }) {
         {allExercises.map((exercise) => {
           const compatible = isExerciseCompatible(exercise, profile.availableEquipment);
           const showableEquipment = exercise.requiredEquipment.filter((e) => e !== "none");
+          const illustration = exercise.illustration ?? { emoji: "💪", accent: "moss" as const };
           return (
-            <Card key={exercise.id} className="space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-base font-medium text-ink-900">{exercise.name}</p>
-                <Badge tone={compatible ? "moss" : "warn"}>
-                  {compatible ? "Compatible" : "Accessoire manquant"}
-                </Badge>
-              </div>
-              <p className="text-xs text-sand-600">
-                {exerciseCategoryLabel[exercise.category]}
-                {exercise.targetZones.length > 0 ? ` · ${exercise.targetZones.join(", ")}` : ""}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {showableEquipment.length === 0 ? (
-                  <Badge tone="moss">Aucun équipement</Badge>
-                ) : (
-                  showableEquipment.map((eq) => (
-                    <Badge key={eq} tone="neutral">
-                      {equipmentLabel[eq]}
+            <article
+              key={exercise.id}
+              className="overflow-hidden rounded-soft border border-cream-200 bg-white shadow-soft"
+            >
+              <div className="flex items-stretch">
+                <div
+                  aria-hidden
+                  className={`flex w-20 shrink-0 items-center justify-center text-3xl ${
+                    libraryAccent[illustration.accent]
+                  }`}
+                >
+                  {illustration.emoji}
+                </div>
+                <div className="min-w-0 flex-1 space-y-1.5 p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-[11px] uppercase tracking-wide text-sand-600">
+                        {exerciseCategoryLabel[exercise.category]}
+                      </p>
+                      <p className="truncate text-sm font-medium text-ink-900">
+                        {exercise.name}
+                      </p>
+                    </div>
+                    <Badge tone={compatible ? "moss" : "warn"}>
+                      {compatible ? "Compatible" : "Accessoire manquant"}
                     </Badge>
-                  ))
-                )}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {showableEquipment.length === 0 ? (
+                      <Badge tone="neutral">Aucun équipement</Badge>
+                    ) : (
+                      showableEquipment.map((eq) => (
+                        <Badge key={eq} tone="neutral">
+                          {equipmentLabel[eq]}
+                        </Badge>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
-            </Card>
+            </article>
           );
         })}
       </div>

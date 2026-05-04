@@ -18,6 +18,7 @@ export const exercises: Exercise[] = [
     },
     alternatives: ["pont-fessier"],
     visualKey: "squat-chaise",
+    illustration: { emoji: "🪑", accent: "sand" },
   },
   {
     id: "pompes-mur",
@@ -35,6 +36,7 @@ export const exercises: Exercise[] = [
       progression: "Recule encore, descends plus profond.",
     },
     visualKey: "pompes-mur",
+    illustration: { emoji: "🧱", accent: "cream" },
   },
   {
     id: "pont-fessier",
@@ -52,6 +54,7 @@ export const exercises: Exercise[] = [
       progression: "Pause 3 secondes en haut.",
     },
     visualKey: "pont-fessier",
+    illustration: { emoji: "🟫", accent: "moss" },
   },
   {
     id: "rowing-elastique",
@@ -69,6 +72,7 @@ export const exercises: Exercise[] = [
       progression: "Augmente la résistance ou la pause en contraction.",
     },
     visualKey: "rowing-elastique",
+    illustration: { emoji: "🎗️", accent: "warm" },
   },
   {
     id: "fente-assistee",
@@ -87,6 +91,7 @@ export const exercises: Exercise[] = [
     },
     alternatives: ["pont-fessier"],
     visualKey: "fente-assistee",
+    illustration: { emoji: "🦵", accent: "sand" },
   },
   {
     id: "dead-bug",
@@ -104,6 +109,7 @@ export const exercises: Exercise[] = [
       progression: "Ralentis le mouvement, garde 2 secondes en extension.",
     },
     visualKey: "dead-bug",
+    illustration: { emoji: "🌀", accent: "moss" },
   },
   {
     id: "respiration-360",
@@ -121,6 +127,7 @@ export const exercises: Exercise[] = [
       progression: "Allonge l’expiration jusqu’à 10 secondes.",
     },
     visualKey: "respiration-360",
+    illustration: { emoji: "🌬️", accent: "cream" },
   },
   {
     id: "marche-post-repas",
@@ -137,5 +144,6 @@ export const exercises: Exercise[] = [
       progression: "15 à 20 minutes à rythme naturel.",
     },
     visualKey: "marche-post-repas",
+    illustration: { emoji: "🚶‍♀️", accent: "moss" },
   },
 ];

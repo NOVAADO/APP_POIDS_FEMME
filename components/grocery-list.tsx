@@ -43,11 +43,11 @@ export function GroceryList({ items, onTogglePantry, onTogglePurchased }: Grocer
               return (
                 <li
                   key={item.key}
-                  className={`rounded-soft border p-3 transition-colors ${
+                  className={`rounded-soft border p-3.5 transition-colors ${
                     item.purchased
-                      ? "border-moss-500/30 bg-moss-500/5"
+                      ? "border-moss-500/40 bg-moss-50"
                       : item.inPantry
-                      ? "border-sand-400/40 bg-sand-400/5"
+                      ? "border-sand-400/40 bg-cream-100"
                       : "border-cream-200 bg-white"
                   }`}
                 >
@@ -66,14 +66,14 @@ export function GroceryList({ items, onTogglePantry, onTogglePurchased }: Grocer
                     </p>
                   ) : null}
 
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="mt-3 flex flex-wrap gap-1.5">
                     <button
                       type="button"
                       onClick={() => onTogglePantry(item.key)}
                       aria-pressed={item.inPantry}
-                      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                      className={`inline-flex h-8 items-center rounded-pill border px-3 text-xs transition-colors ${
                         item.inPantry
-                          ? "border-sand-400 bg-sand-400/20 text-sand-600"
+                          ? "border-sand-400 bg-cream-200 text-sand-700"
                           : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
                       }`}
                     >
@@ -83,9 +83,9 @@ export function GroceryList({ items, onTogglePantry, onTogglePurchased }: Grocer
                       type="button"
                       onClick={() => onTogglePurchased(item.key)}
                       aria-pressed={item.purchased}
-                      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                      className={`inline-flex h-8 items-center rounded-pill border px-3 text-xs transition-colors ${
                         item.purchased
-                          ? "border-moss-500 bg-moss-500/10 text-moss-600"
+                          ? "border-moss-500 bg-moss-500 text-cream-50"
                           : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
                       }`}
                     >

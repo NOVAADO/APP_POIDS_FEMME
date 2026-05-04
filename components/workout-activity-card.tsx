@@ -14,10 +14,10 @@ const variantLabel: Record<Variant, string> = {
 };
 
 const accentClasses: Record<NonNullable<ExerciseIllustration["accent"]>, string> = {
-  moss: "bg-moss-500/15 text-moss-600",
-  sand: "bg-sand-400/25 text-sand-600",
-  cream: "bg-cream-200 text-ink-700",
-  warm: "bg-amber-100 text-amber-800",
+  moss: "bg-moss-50 text-moss-600",
+  sand: "bg-cream-100 text-sand-600",
+  cream: "bg-cream-100 text-ink-700",
+  warm: "bg-amber-50 text-amber-700",
 };
 
 type WorkoutActivityCardProps = {
@@ -46,8 +46,8 @@ export function WorkoutActivityCard({
 
   return (
     <article
-      className={`overflow-hidden rounded-soft border bg-white shadow-soft transition-colors ${
-        activity.completed ? "border-moss-500/40 bg-moss-500/5" : "border-cream-200"
+      className={`overflow-hidden rounded-soft bg-white shadow-soft ${
+        activity.completed ? "ring-1 ring-moss-500/40" : ""
       }`}
     >
       <div className="flex items-stretch">
@@ -61,7 +61,7 @@ export function WorkoutActivityCard({
         </div>
 
         <div className="min-w-0 flex-1 p-4">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-wide text-sand-600">
                 {exerciseCategoryLabel[exercise.category]}
@@ -69,7 +69,9 @@ export function WorkoutActivityCard({
               <h3 className="mt-0.5 truncate text-base font-semibold text-ink-900">
                 {exercise.name}
               </h3>
-              <p className="mt-1 text-lg font-semibold tabular-nums text-ink-900">{metric}</p>
+              <p className="mt-1 text-xl font-semibold tabular-nums text-ink-900">
+                {metric}
+              </p>
             </div>
 
             <button
@@ -81,13 +83,13 @@ export function WorkoutActivityCard({
                   ? `Annuler ${exercise.name}`
                   : `Marquer ${exercise.name} comme fait`
               }
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors ${
                 activity.completed
-                  ? "border-moss-500 bg-moss-500 text-white"
-                  : "border-sand-400 bg-white text-transparent hover:border-moss-500"
+                  ? "bg-ink-900 text-cream-50"
+                  : "border-2 border-cream-200 bg-white text-transparent hover:border-ink-700"
               }`}
             >
-              <span aria-hidden className="text-base">
+              <span aria-hidden className="text-lg">
                 ✓
               </span>
             </button>
@@ -95,7 +97,7 @@ export function WorkoutActivityCard({
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-cream-200 px-4 py-3">
+      <div className="space-y-2.5 border-t border-cream-200 px-4 py-3">
         <div className="flex flex-wrap gap-1.5">
           {showableEquipment.length === 0 ? (
             <Badge tone="moss">Aucun équipement</Badge>
@@ -110,7 +112,7 @@ export function WorkoutActivityCard({
         </div>
 
         {exercise.targetZones.length > 0 ? (
-          <p className="text-xs text-sand-600">
+          <p className="text-xs text-sand-700">
             Zone : {exercise.targetZones.join(", ")}
           </p>
         ) : null}
@@ -122,10 +124,10 @@ export function WorkoutActivityCard({
               type="button"
               onClick={() => setVariant(v)}
               aria-pressed={variant === v}
-              className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+              className={`inline-flex h-8 items-center rounded-pill border px-3 text-xs transition-colors ${
                 variant === v
-                  ? "border-moss-500 bg-moss-500/10 text-moss-600"
-                  : "border-cream-200 bg-white text-sand-600 hover:bg-cream-100"
+                  ? "border-ink-900 bg-ink-900 text-cream-50"
+                  : "border-cream-200 bg-white text-sand-700 hover:bg-cream-100"
               }`}
             >
               {variantLabel[v]}
@@ -136,7 +138,7 @@ export function WorkoutActivityCard({
         <p className="text-sm text-ink-700">{exercise.instructions[variant]}</p>
 
         {hasMissing && exercise.alternatives && exercise.alternatives.length > 0 ? (
-          <p className="text-xs text-sand-600">
+          <p className="text-xs text-sand-700">
             Tu peux choisir la version douce ou un autre exercice du jour.
           </p>
         ) : null}

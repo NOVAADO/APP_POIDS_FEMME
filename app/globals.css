@@ -10,10 +10,31 @@
 
   body {
     @apply bg-cream-50 text-ink-900 antialiased;
-    font-feature-settings: "ss01" on;
+    font-feature-settings: "ss01" on, "cv11" on;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tightish;
   }
 
   :focus-visible {
     @apply outline-none ring-2 ring-moss-500 ring-offset-2 ring-offset-cream-50;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1.5L6 6.5L11 1.5' stroke='%237a6c54' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 0.7rem;
+    padding-right: 2rem;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
   }
 }

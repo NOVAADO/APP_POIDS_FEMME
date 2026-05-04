@@ -13,7 +13,7 @@ import { recipes as allRecipes } from "@/data/recipes";
 import { filterRecipes, isRecipeCompatible } from "@/lib/recipes";
 import { mealTypeLabel } from "@/lib/labels";
 import { Card } from "./ui/card";
-import { SectionTitle } from "./ui/section-title";
+import { ScreenHeader } from "./ui/screen-header";
 import { Button } from "./ui/button";
 import { MascotCard } from "./mascot-card";
 import { RecipeCard } from "./recipe-card";
@@ -27,11 +27,7 @@ type MealsScreenProps = {
   onToggleShowAll: () => void;
   onChangeRecipe: (day: DayKey, mealType: MealType, recipeId: string | null) => void;
   onChangeServings: (day: DayKey, mealType: MealType, servings: number) => void;
-  onCopyDayMeal: (
-    sourceDay: DayKey,
-    targetDay: DayKey,
-    mealType: MealType,
-  ) => void;
+  onCopyDayMeal: (sourceDay: DayKey, targetDay: DayKey, mealType: MealType) => void;
   onResetWeek: () => void;
 };
 
@@ -60,8 +56,6 @@ function pickQuickRecipes(recipes: Recipe[]): Recipe[] {
       r.id !== family?.id,
   );
   const picks = [quick, family, stable].filter((r): r is Recipe => Boolean(r));
-  if (picks.length >= 3) return picks.slice(0, 3);
-  // Fallback: complete with first compatible recipes not already picked
   const taken = new Set(picks.map((r) => r.id));
   for (const r of recipes) {
     if (picks.length >= 3) break;
@@ -109,18 +103,17 @@ export function MealsScreen({
   const quickPicks = useMemo(() => pickQuickRecipes(visibleRecipes), [visibleRecipes]);
 
   return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-semibold text-ink-900">Repas</h1>
-        <p className="mt-1 text-sm text-sand-600">
-          On y va un jour à la fois. Le plan peut rester partiel.
-        </p>
-      </header>
+    <div className="space-y-6">
+      <ScreenHeader
+        eyebrow="Repas"
+        title="Une semaine, à ton rythme"
+        subtitle="On y va une étape à la fois. Le plan peut rester partiel."
+      />
 
       <MascotCard mascot={mascot} context="meals" />
 
       {profile.foodStructurePreference !== "hidden" ? (
-        <Card className="space-y-2">
+        <Card padding="md" className="space-y-2">
           <button
             type="button"
             onClick={() => setStructureInfoOpen((v) => !v)}
@@ -128,12 +121,12 @@ export function MealsScreen({
             className="flex w-full items-center justify-between gap-2 text-left"
           >
             <span className="text-sm font-medium text-ink-900">Repères alimentaires</span>
-            <span className="text-xs text-moss-600">
+            <span className="text-xs text-ink-700">
               {structureInfoOpen ? "Masquer" : "En savoir plus"}
             </span>
           </button>
           {structureInfoOpen ? (
-            <p className="text-sm text-sand-600">
+            <p className="text-sm text-sand-700">
               L’application peut afficher la structure simple des repas : protéine, légumes, fruit,
               féculent et lipide. Ces repères servent à réduire les décisions, pas à te contrôler.
               Tu peux les masquer ou les rendre plus précis dans ton profil.
@@ -142,10 +135,11 @@ export function MealsScreen({
         </Card>
       ) : null}
 
-      <section>
-        <SectionTitle hint="Tu n’as pas besoin de tout planifier d’un coup.">
-          Planificateur hebdomadaire
-        </SectionTitle>
+      <section className="space-y-3">
+        <SectionHeader
+          title="Planificateur"
+          hint="Tu n’as pas besoin de tout planifier d’un coup."
+        />
         <MealPlanner
           mealPlan={mealPlan}
           visibleRecipes={visibleRecipes}
@@ -158,11 +152,12 @@ export function MealsScreen({
       </section>
 
       {quickPicks.length >= 3 ? (
-        <section>
-          <SectionTitle hint="Pas besoin de tout regarder. Tu peux partir d’ici.">
-            Choix rapides
-          </SectionTitle>
-          <div className="space-y-2">
+        <section className="space-y-3">
+          <SectionHeader
+            title="Choix rapides"
+            hint="Pas besoin de tout regarder. Tu peux partir d’ici."
+          />
+          <div className="space-y-3">
             {quickPicks.map((recipe) => (
               <RecipeCard
                 key={`quick-${recipe.id}`}
@@ -176,15 +171,14 @@ export function MealsScreen({
       ) : null}
 
       <section className="space-y-3">
-        <SectionTitle
+        <SectionHeader
+          title="Livre de recettes"
           hint={
             showAllRecipes
-              ? "Tu vois toutes les recettes, y compris celles qui sortent de ton profil."
-              : "Recettes filtrées selon ton profil alimentaire."
+              ? "Tu vois tout, y compris les recettes hors profil."
+              : "Filtré selon ton profil alimentaire."
           }
-        >
-          Livre de recettes
-        </SectionTitle>
+        />
 
         <div className="-mx-1 flex flex-wrap gap-1.5 px-1">
           {TYPE_FILTER_OPTIONS.map((option) => {
@@ -195,9 +189,9 @@ export function MealsScreen({
                 type="button"
                 onClick={() => setTypeFilter(option.value)}
                 aria-pressed={active}
-                className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                className={`inline-flex h-9 items-center rounded-pill border px-4 text-xs transition-colors ${
                   active
-                    ? "border-moss-500 bg-moss-500/10 text-moss-600"
+                    ? "border-ink-900 bg-ink-900 text-cream-50"
                     : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
                 }`}
               >
@@ -207,20 +201,20 @@ export function MealsScreen({
           })}
         </div>
 
-        <Card className="flex items-center justify-between gap-3">
+        <Card padding="md" className="flex items-center justify-between gap-3">
           <p className="text-sm text-ink-700">
             {showAllRecipes ? "Mode complet activé" : "Filtres du profil appliqués"}
           </p>
           <Button variant="secondary" onClick={onToggleShowAll}>
-            {showAllRecipes ? "Revenir aux recettes compatibles" : "Voir toutes les recettes"}
+            {showAllRecipes ? "Mode profil" : "Voir tout"}
           </Button>
         </Card>
 
         {filteredByType.length === 0 ? (
-          <Card>
-            <p className="text-sm text-sand-600">
+          <Card padding="md">
+            <p className="text-sm text-sand-700">
               Aucune recette ne correspond pour le moment. Tu peux élargir le filtre ou activer
-              « Voir toutes les recettes ».
+              « Voir tout ».
             </p>
           </Card>
         ) : null}
@@ -229,9 +223,9 @@ export function MealsScreen({
           const list = grouped.get(mealType) ?? [];
           if (list.length === 0) return null;
           return (
-            <div key={mealType} className="space-y-2">
+            <div key={mealType} className="space-y-3">
               <p className="px-1 text-sm font-medium text-ink-900">{mealTypeLabel[mealType]}</p>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {list.map((recipe) => {
                   const compatible = isRecipeCompatible(recipe, profile.foodFilters);
                   return (
@@ -249,6 +243,15 @@ export function MealsScreen({
           );
         })}
       </section>
+    </div>
+  );
+}
+
+function SectionHeader({ title, hint }: { title: string; hint?: string }) {
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
+      {hint ? <p className="mt-0.5 text-xs text-sand-700">{hint}</p> : null}
     </div>
   );
 }

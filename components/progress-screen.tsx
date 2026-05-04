@@ -3,7 +3,7 @@
 import type { DailyCheckIn, DayKey, MascotProfile } from "@/lib/types";
 import { DAY_KEYS, DAY_LABELS, getCurrentDayKey } from "@/lib/dates";
 import { Card } from "./ui/card";
-import { SectionTitle } from "./ui/section-title";
+import { ScreenHeader } from "./ui/screen-header";
 import { Badge } from "./ui/badge";
 import { MascotCard } from "./mascot-card";
 
@@ -70,20 +70,20 @@ export function ProgressScreen({
   }
 
   return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-semibold text-ink-900">Progression</h1>
-        <p className="mt-1 text-sm text-sand-600">
-          Énergie, force, sommeil, fringales, digestion, constance. Le poids n’est pas central.
-        </p>
-      </header>
+    <div className="space-y-6">
+      <ScreenHeader
+        eyebrow="Progression"
+        title="Suivi doux"
+        subtitle="Énergie, force, sommeil, fringales, digestion, constance. Le poids n’est pas central."
+      />
 
       <MascotCard mascot={mascot} context="progress" />
 
-      <Card>
-        <SectionTitle hint="Coche ce qui s’est passé. Aucune obligation.">
-          Suivi doux du jour
-        </SectionTitle>
+      <Card padding="lg" className="space-y-3">
+        <div>
+          <h2 className="text-base font-semibold text-ink-900">Suivi doux du jour</h2>
+          <p className="text-xs text-sand-700">Coche ce qui s’est passé. Aucune obligation.</p>
+        </div>
         <ul className="space-y-2">
           {checkboxes.map(({ key, label }) => {
             const checked = checkIn[key];
@@ -117,8 +117,8 @@ export function ProgressScreen({
         </ul>
       </Card>
 
-      <Card className="space-y-4">
-        <SectionTitle>Échelles douces</SectionTitle>
+      <Card padding="lg" className="space-y-4">
+        <h2 className="text-base font-semibold text-ink-900">Échelles douces</h2>
         {scales.map(({ key, label, hint }) => {
           const value = checkIn[key];
           return (
@@ -136,9 +136,9 @@ export function ProgressScreen({
                       type="button"
                       onClick={() => onUpdate({ [key]: (value === n ? undefined : n) as Scale | undefined })}
                       aria-pressed={active}
-                      className={`h-9 flex-1 rounded-soft border text-sm transition-colors ${
+                      className={`h-10 flex-1 rounded-soft border text-sm transition-colors ${
                         active
-                          ? "border-moss-500 bg-moss-500 text-white"
+                          ? "border-ink-900 bg-ink-900 text-cream-50"
                           : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
                       }`}
                     >
@@ -152,8 +152,8 @@ export function ProgressScreen({
         })}
       </Card>
 
-      <Card>
-        <SectionTitle>Note douce du jour</SectionTitle>
+      <Card padding="lg" className="space-y-3">
+        <h2 className="text-base font-semibold text-ink-900">Note douce du jour</h2>
         <textarea
           value={checkIn.notes ?? ""}
           onChange={(e) => onUpdate({ notes: e.target.value })}
@@ -163,10 +163,11 @@ export function ProgressScreen({
         />
       </Card>
 
-      <Card className="space-y-3">
-        <SectionTitle hint="Une journée active = au moins une action cochée.">
-          Constance hebdomadaire
-        </SectionTitle>
+      <Card padding="lg" className="space-y-3">
+        <div>
+          <h2 className="text-base font-semibold text-ink-900">Constance hebdomadaire</h2>
+          <p className="text-xs text-sand-700">Une journée active = au moins une action cochée.</p>
+        </div>
         <div className="flex items-center justify-between gap-3 text-sm">
           <p className="text-ink-900">
             {weeklyConsistency.activeDays} sur {weeklyConsistency.totalDays} jour

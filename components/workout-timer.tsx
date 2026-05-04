@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { SectionTitle } from "./ui/section-title";
 
 const PRESETS_SECONDS: { label: string; value: number }[] = [
   { label: "1 min", value: 60 },
@@ -62,12 +61,16 @@ export function WorkoutTimer() {
   }
 
   return (
-    <Card>
-      <SectionTitle hint="On commence doucement. Ce qui est fait compte.">Minuterie</SectionTitle>
+    <Card padding="lg" className="space-y-4">
+      <div>
+        <h2 className="text-base font-semibold text-ink-900">Minuterie</h2>
+        <p className="text-xs text-sand-700">On commence doucement. Ce qui est fait compte.</p>
+      </div>
+
       <div className="flex flex-col items-center gap-4">
         <p
           aria-live="polite"
-          className="font-mono text-5xl tabular-nums text-ink-900"
+          className="font-mono text-6xl tabular-nums text-ink-900"
         >
           {formatMMSS(remaining)}
         </p>
@@ -78,9 +81,9 @@ export function WorkoutTimer() {
               type="button"
               onClick={() => handlePreset(preset.value)}
               aria-pressed={duration === preset.value}
-              className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+              className={`inline-flex h-9 items-center rounded-pill border px-3 text-xs transition-colors ${
                 duration === preset.value
-                  ? "border-moss-500 bg-moss-500/10 text-moss-600"
+                  ? "border-ink-900 bg-ink-900 text-cream-50"
                   : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
               }`}
             >
@@ -96,7 +99,7 @@ export function WorkoutTimer() {
             Reset
           </Button>
         </div>
-        <p className="text-center text-xs text-sand-600">
+        <p className="text-center text-xs text-sand-700">
           Tu peux arrêter après la version courte.
         </p>
       </div>

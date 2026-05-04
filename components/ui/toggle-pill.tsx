@@ -16,9 +16,9 @@ export function TogglePill({ active, onClick, children, ariaLabel }: TogglePillP
       onClick={onClick}
       aria-pressed={active}
       aria-label={ariaLabel}
-      className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+      className={`inline-flex h-9 items-center rounded-pill border px-4 text-sm transition-colors ${
         active
-          ? "border-moss-500 bg-moss-500/10 text-moss-600"
+          ? "border-ink-900 bg-ink-900 text-cream-50"
           : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
       }`}
     >

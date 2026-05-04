@@ -18,15 +18,19 @@ function pickMessage(mascot: MascotProfile, context: MascotContext): string {
 export function MascotCard({ mascot, context, variant = "compact" }: MascotCardProps) {
   const isRich = variant === "rich";
   return (
-    <Card className="flex items-start gap-4">
+    <Card
+      padding={isRich ? "lg" : "md"}
+      hero={isRich}
+      className="flex items-start gap-4"
+    >
       <MascotAvatar mascot={mascot} size={isRich ? "lg" : "sm"} />
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-sand-600">
-          {mascot.name} · {mascot.energy}
+        <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
+          {mascot.name} · {mascot.energy.toLowerCase()}
         </p>
         <p className="mt-1 text-base text-ink-900">{pickMessage(mascot, context)}</p>
         {isRich ? (
-          <p className="mt-2 text-xs text-sand-600">{mascot.supportTone}</p>
+          <p className="mt-2 text-xs text-sand-700">{mascot.supportTone}</p>
         ) : null}
       </div>
     </Card>

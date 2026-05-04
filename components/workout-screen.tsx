@@ -17,7 +17,7 @@ import {
 } from "@/lib/workouts";
 import { energyModeOptions, equipmentLabel, exerciseCategoryLabel } from "@/lib/labels";
 import { Card } from "./ui/card";
-import { SectionTitle } from "./ui/section-title";
+import { ScreenHeader } from "./ui/screen-header";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ToggleGroup } from "./ui/toggle-group";
@@ -66,39 +66,40 @@ export function WorkoutScreen({
   }
 
   return (
-    <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-semibold text-ink-900">Bouger</h1>
-        <p className="mt-1 text-sm text-sand-600">{plan.title}</p>
-      </header>
+    <div className="space-y-6">
+      <ScreenHeader eyebrow="Bouger" title={plan.title} />
 
       <MascotCard mascot={mascot} context="workout" />
 
-      <Card>
-        <div className="flex items-center justify-between">
-          <p className="text-base text-ink-900">
-            <span className="font-semibold">{done}</span>
-            <span className="text-sand-600"> sur {total} activités faites</span>
-          </p>
+      <Card hero padding="lg" className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm text-sand-700">Activités faites</p>
           {allDone ? <Badge tone="moss">Belle constance</Badge> : null}
         </div>
-        <p className="mt-2 text-xs text-sand-600">
+        <p className="text-3xl font-semibold tabular-nums text-ink-900">
+          {done}
+          <span className="text-base font-normal text-sand-700"> / {total}</span>
+        </p>
+        <p className="text-xs text-sand-700">
           {allDone
             ? "Ce qui est fait compte. Tu peux t’arrêter ici."
             : "Aucun rattrapage. La version courte compte autant."}
         </p>
       </Card>
 
-      <Card>
-        <SectionTitle hint="Comment est ton énergie aujourd’hui ?">Batterie du jour</SectionTitle>
+      <Card padding="lg" className="space-y-3">
+        <div>
+          <h2 className="text-base font-semibold text-ink-900">Batterie du jour</h2>
+          <p className="text-xs text-sand-700">Comment est ton énergie aujourd’hui ?</p>
+        </div>
         <ToggleGroup<EnergyMode>
           mode="single"
           options={energyModeOptions}
           value={energyMode}
           onChange={onChangeEnergy}
         />
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="text-sm text-sand-600">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm text-sand-700">
             {energyMode === "low"
               ? "Batterie basse : la version courte est appliquée d’office."
               : shortMode
@@ -115,10 +116,10 @@ export function WorkoutScreen({
 
       {groups.length > 0 ? (
         <section className="space-y-3">
-          <SectionTitle>Supersets</SectionTitle>
+          <h2 className="text-lg font-semibold text-ink-900">Supersets</h2>
           {groups.map((group, index) => (
             <div key={group.id} className="rounded-soft bg-cream-100 p-3">
-              <p className="mb-2 px-1 text-xs font-medium uppercase tracking-wide text-sand-600">
+              <p className="mb-2 px-1 text-xs font-medium uppercase tracking-wide text-sand-700">
                 Superset {String.fromCharCode(65 + index)}
               </p>
               <div className="space-y-2">{group.activities.map(renderActivity)}</div>
@@ -129,8 +130,8 @@ export function WorkoutScreen({
 
       {singles.length > 0 ? (
         <section className="space-y-3">
-          <SectionTitle>Activités simples</SectionTitle>
-          <div className="space-y-2">{singles.map(renderActivity)}</div>
+          <h2 className="text-lg font-semibold text-ink-900">Activités simples</h2>
+          <div className="space-y-3">{singles.map(renderActivity)}</div>
         </section>
       ) : null}
 
@@ -142,18 +143,21 @@ export function WorkoutScreen({
 }
 
 const libraryAccent: Record<"moss" | "sand" | "cream" | "warm", string> = {
-  moss: "bg-moss-500/15 text-moss-600",
-  sand: "bg-sand-400/25 text-sand-600",
-  cream: "bg-cream-200 text-ink-700",
-  warm: "bg-amber-100 text-amber-800",
+  moss: "bg-moss-50 text-moss-600",
+  sand: "bg-cream-100 text-sand-600",
+  cream: "bg-cream-100 text-ink-700",
+  warm: "bg-amber-50 text-amber-700",
 };
 
 function ExerciseLibrary({ profile }: { profile: UserProfile }) {
   return (
     <section className="space-y-3">
-      <SectionTitle hint="Tous les exercices disponibles, compatibles ou non avec ton équipement.">
-        Bibliothèque d’exercices
-      </SectionTitle>
+      <div>
+        <h2 className="text-lg font-semibold text-ink-900">Bibliothèque d’exercices</h2>
+        <p className="text-xs text-sand-700">
+          Tous les exercices, compatibles ou non avec ton équipement.
+        </p>
+      </div>
       <div className="space-y-2">
         {allExercises.map((exercise) => {
           const compatible = isExerciseCompatible(exercise, profile.availableEquipment);
@@ -162,7 +166,7 @@ function ExerciseLibrary({ profile }: { profile: UserProfile }) {
           return (
             <article
               key={exercise.id}
-              className="overflow-hidden rounded-soft border border-cream-200 bg-white shadow-soft"
+              className="overflow-hidden rounded-soft bg-white shadow-soft"
             >
               <div className="flex items-stretch">
                 <div
@@ -207,4 +211,3 @@ function ExerciseLibrary({ profile }: { profile: UserProfile }) {
     </section>
   );
 }
-

@@ -68,12 +68,12 @@ export function RecipeCard({
   const supportNote = recipe.supportNote ?? "Repas simple à ajouter à ta semaine.";
 
   return (
-    <Card className="space-y-3">
+    <Card padding="lg" className="space-y-3">
       <p className="text-xs text-sand-600">
         {mealTypeLabel[recipe.mealType]} · {compatLabel}
       </p>
 
-      <h3 className="text-lg font-semibold text-ink-900">{recipe.title}</h3>
+      <h3 className="text-xl font-semibold leading-snug text-ink-900">{recipe.title}</h3>
 
       <div className="flex flex-wrap gap-1.5 text-xs">
         <Badge tone="neutral">{recipe.prepTimeMinutes} min</Badge>
@@ -88,7 +88,7 @@ export function RecipeCard({
       <p className="text-sm text-ink-700">{supportNote}</p>
 
       {hiddenByDefault ? (
-        <p className="text-xs text-sand-600">
+        <p className="text-xs text-sand-700">
           Tu la vois parce que tu as activé « Voir toutes les recettes ».
         </p>
       ) : null}
@@ -96,7 +96,7 @@ export function RecipeCard({
       {structureSummary.length > 0 ? (
         structurePreference === "precise" ? (
           <div>
-            <p className="mb-1 text-xs text-sand-600">Structure du repas</p>
+            <p className="mb-1 text-xs text-sand-700">Structure du repas</p>
             <div className="flex flex-wrap gap-1.5">
               {structureSummary.map((label) => (
                 <Badge key={label} tone="moss">
@@ -106,7 +106,7 @@ export function RecipeCard({
             </div>
           </div>
         ) : (
-          <p className="text-xs text-sand-600">
+          <p className="text-xs text-sand-700">
             Équilibre : {structureSummary.join(" + ").toLowerCase()}.
           </p>
         )
@@ -116,13 +116,13 @@ export function RecipeCard({
         type="button"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        className="text-sm font-medium text-moss-600 hover:underline"
+        className="inline-flex h-10 items-center rounded-pill bg-cream-100 px-4 text-sm font-medium text-ink-900 transition-colors hover:bg-cream-200"
       >
         {expanded ? "Masquer la recette" : "Voir la recette"}
       </button>
 
       {expanded ? (
-        <div className="space-y-3 border-t border-cream-200 pt-3">
+        <div className="space-y-4 border-t border-cream-200 pt-4">
           <div>
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
               Ingrédients

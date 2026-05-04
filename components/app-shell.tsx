@@ -203,7 +203,7 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-svh flex-col bg-cream-50">
-      <main className="mx-auto w-full max-w-md flex-1 px-screen-px pb-28 pt-7">
+      <main className="mx-auto w-full max-w-md flex-1 px-screen-px pb-32 pt-7">
         {activeTab === "today" && (
           <TodayScreen
             mascot={mascot}

@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import type {
   DailyWorkoutPlan,
   EnergyMode,
+  Exercise,
   MascotProfile,
   UserProfile,
   WorkoutActivity,
@@ -25,6 +27,7 @@ import { MascotCard } from "./mascot-card";
 import { WorkoutActivityCard } from "./workout-activity-card";
 import { WorkoutTimer } from "./workout-timer";
 import { ExerciseIllustration } from "./exercise-illustration";
+import { ExerciseDetailSheet } from "./exercise-detail-sheet";
 
 type WorkoutScreenProps = {
   plan: DailyWorkoutPlan;
@@ -144,40 +147,41 @@ export function WorkoutScreen({
 }
 
 function ExerciseLibrary({ profile }: { profile: UserProfile }) {
+  const [detail, setDetail] = useState<Exercise | null>(null);
+
   return (
     <section className="space-y-3">
       <div>
         <h2 className="text-lg font-semibold text-ink-900">Bibliothèque d’exercices</h2>
         <p className="text-xs text-sand-700">
-          Tous les exercices, compatibles ou non avec ton équipement.
+          Tape une carte pour voir le détail d’un mouvement.
         </p>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {allExercises.map((exercise) => {
           const compatible = isExerciseCompatible(exercise, profile.availableEquipment);
           const showableEquipment = exercise.requiredEquipment.filter((e) => e !== "none");
+          const supportNote =
+            exercise.supportNote ?? "Un mouvement doux à intégrer à ton plan.";
           return (
-            <article
+            <button
               key={exercise.id}
-              className="overflow-hidden rounded-soft bg-white shadow-soft"
+              type="button"
+              onClick={() => setDetail(exercise)}
+              className="w-full text-left"
+              aria-label={`Voir le détail : ${exercise.name}`}
             >
-              <div className="flex items-stretch">
-                <ExerciseIllustration exerciseId={exercise.id} size="library" />
-                <div className="min-w-0 flex-1 space-y-1.5 p-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-[11px] uppercase tracking-wide text-sand-600">
-                        {exerciseCategoryLabel[exercise.category]}
-                      </p>
-                      <p className="truncate text-sm font-medium text-ink-900">
-                        {exercise.name}
-                      </p>
-                    </div>
-                    <Badge tone={compatible ? "moss" : "warn"}>
-                      {compatible ? "Compatible" : "Accessoire manquant"}
-                    </Badge>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
+              <article className="overflow-hidden rounded-soft bg-white shadow-soft transition-shadow hover:shadow-hero">
+                <ExerciseIllustration exerciseId={exercise.id} size="banner" />
+                <div className="space-y-2 p-4">
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-sand-700">
+                    {exerciseCategoryLabel[exercise.category]}
+                  </p>
+                  <h3 className="text-base font-semibold leading-snug text-ink-900">
+                    {exercise.name}
+                  </h3>
+                  <p className="text-sm text-sand-700">{supportNote}</p>
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     {showableEquipment.length === 0 ? (
                       <Badge tone="neutral">Aucun équipement</Badge>
                     ) : (
@@ -187,13 +191,29 @@ function ExerciseLibrary({ profile }: { profile: UserProfile }) {
                         </Badge>
                       ))
                     )}
+                    <span
+                      className={`ml-auto text-[11px] ${
+                        compatible ? "text-moss-600" : "text-amber-700"
+                      }`}
+                    >
+                      {compatible ? "Prêt avec ton équipement" : "Alternative à prévoir"}
+                    </span>
                   </div>
+                  <p className="pt-1 text-xs font-medium text-ink-900 underline-offset-2 hover:underline">
+                    Voir l’exercice →
+                  </p>
                 </div>
-              </div>
-            </article>
+              </article>
+            </button>
           );
         })}
       </div>
+
+      <ExerciseDetailSheet
+        exercise={detail}
+        missingEquipment={detail ? getMissingEquipment(detail, profile.availableEquipment) : []}
+        onClose={() => setDetail(null)}
+      />
     </section>
   );
 }

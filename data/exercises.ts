@@ -18,6 +18,7 @@ export const exercises: Exercise[] = [
     },
     alternatives: ["pont-fessier"],
     visualKey: "squat-chaise",
+    supportNote: "Renforce les jambes avec un appui rassurant.",
   },
   {
     id: "pompes-mur",
@@ -35,6 +36,7 @@ export const exercises: Exercise[] = [
       progression: "Recule encore, descends plus profond.",
     },
     visualKey: "pompes-mur",
+    supportNote: "Travaille le haut du corps sans te mettre au sol.",
   },
   {
     id: "pont-fessier",
@@ -52,6 +54,7 @@ export const exercises: Exercise[] = [
       progression: "Pause 3 secondes en haut.",
     },
     visualKey: "pont-fessier",
+    supportNote: "Active les fessiers et soutient le bassin.",
   },
   {
     id: "rowing-elastique",
@@ -69,6 +72,7 @@ export const exercises: Exercise[] = [
       progression: "Augmente la résistance ou la pause en contraction.",
     },
     visualKey: "rowing-elastique",
+    supportNote: "Renforce le dos et aide la posture.",
   },
   {
     id: "fente-assistee",
@@ -87,6 +91,7 @@ export const exercises: Exercise[] = [
     },
     alternatives: ["pont-fessier"],
     visualKey: "fente-assistee",
+    supportNote: "Renforce une jambe à la fois, en sécurité.",
   },
   {
     id: "dead-bug",
@@ -104,6 +109,7 @@ export const exercises: Exercise[] = [
       progression: "Ralentis le mouvement, garde 2 secondes en extension.",
     },
     visualKey: "dead-bug",
+    supportNote: "Stabilise le tronc sans forcer.",
   },
   {
     id: "respiration-360",
@@ -121,6 +127,7 @@ export const exercises: Exercise[] = [
       progression: "Allonge l’expiration jusqu’à 10 secondes.",
     },
     visualKey: "respiration-360",
+    supportNote: "Aide à revenir dans ton corps, en douceur.",
   },
   {
     id: "marche-post-repas",
@@ -137,5 +144,6 @@ export const exercises: Exercise[] = [
       progression: "15 à 20 minutes à rythme naturel.",
     },
     visualKey: "marche-post-repas",
+    supportNote: "Soutient la glycémie en douceur.",
   },
 ];

@@ -104,11 +104,6 @@ export type AdaptationTag =
   | "low_time"
   | "body_shame";
 
-export type ExerciseIllustration = {
-  emoji: string;
-  accent: "moss" | "sand" | "cream" | "warm";
-};
-
 export type Exercise = {
   id: string;
   name: string;
@@ -127,7 +122,6 @@ export type Exercise = {
   };
   alternatives?: string[];
   visualKey: string;
-  illustration?: ExerciseIllustration;
 };
 
 export type WorkoutActivity = {

@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import { MascotCard } from "./mascot-card";
 import { RecipeCard } from "./recipe-card";
 import { MealPlanner } from "./meal-planner";
+import { AiMealAnalysisCard } from "./ai-meal-analysis-card";
 
 type MealsScreenProps = {
   profile: UserProfile;
@@ -135,21 +136,6 @@ export function MealsScreen({
         </Card>
       ) : null}
 
-      <Card padding="md" className="space-y-2">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-ink-900">Analyse douce du repas</p>
-            <p className="mt-1 text-xs text-sand-700">
-              Bientôt, l’application pourra t’aider à voir si ton repas contient une protéine, des
-              fibres, un féculent et un bon gras — sans mettre les calories au centre.
-            </p>
-          </div>
-          <span className="shrink-0 rounded-pill bg-cream-100 px-3 py-1 text-[11px] font-medium text-sand-700">
-            À venir
-          </span>
-        </div>
-      </Card>
-
       <section className="space-y-3">
         <SectionHeader
           title="Planificateur"
@@ -184,6 +170,8 @@ export function MealsScreen({
           </div>
         </section>
       ) : null}
+
+      <AiMealAnalysisCard />
 
       <section className="space-y-3">
         <SectionHeader

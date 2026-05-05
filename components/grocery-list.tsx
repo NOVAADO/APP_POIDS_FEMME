@@ -6,11 +6,13 @@ import { groupGroceryItemsByCategory } from "@/lib/grocery";
 import { formatGroceryItemName } from "@/lib/format";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 type GroceryListProps = {
   items: GroceryItem[];
   onTogglePantry: (key: string) => void;
   onTogglePurchased: (key: string) => void;
+  onOpenMeals?: () => void;
 };
 
 function StatusChip({ item }: { item: GroceryItem }) {
@@ -35,14 +37,24 @@ function StatusChip({ item }: { item: GroceryItem }) {
   );
 }
 
-export function GroceryList({ items, onTogglePantry, onTogglePurchased }: GroceryListProps) {
+export function GroceryList({
+  items,
+  onTogglePantry,
+  onTogglePurchased,
+  onOpenMeals,
+}: GroceryListProps) {
   if (items.length === 0) {
     return (
-      <Card>
+      <Card padding="lg" className="space-y-3">
         <p className="text-sm text-sand-700">
-          Aucun ingrédient pour le moment. Choisis des recettes dans le planificateur, la liste se
-          construira toute seule.
+          Aucun ingrédient pour le moment. Choisis des recettes dans le planificateur, la liste
+          se construira toute seule.
         </p>
+        {onOpenMeals ? (
+          <Button variant="soft" onClick={onOpenMeals} fullWidth>
+            Ouvrir Repas
+          </Button>
+        ) : null}
       </Card>
     );
   }

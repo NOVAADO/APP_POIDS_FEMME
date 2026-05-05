@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import type { GroceryItem, MascotProfile, UserProfile } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import type { GroceryItem, MascotProfile, TabId, UserProfile } from "@/lib/types";
 import { buildGroceryShareText } from "@/lib/grocery";
 import { copyToClipboard } from "@/lib/copy";
 import { storeLabel } from "@/lib/labels";
 import { Card } from "./ui/card";
 import { ScreenHeader } from "./ui/screen-header";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { MascotCard } from "./mascot-card";
 import { GroceryList } from "./grocery-list";
@@ -18,7 +17,10 @@ type GroceryScreenProps = {
   mascot: MascotProfile;
   onTogglePantry: (key: string) => void;
   onTogglePurchased: (key: string) => void;
+  onNavigate: (tab: TabId) => void;
 };
+
+const COPIED_DURATION_MS = 30_000;
 
 export function GroceryScreen({
   items,
@@ -26,8 +28,16 @@ export function GroceryScreen({
   mascot,
   onTogglePantry,
   onTogglePurchased,
+  onNavigate,
 }: GroceryScreenProps) {
   const [copyState, setCopyState] = useState<"idle" | "ok" | "error">("idle");
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, []);
 
   const itemsWithDeals = items.filter((item) => item.deals && item.deals.length > 0);
 
@@ -35,7 +45,11 @@ export function GroceryScreen({
     if (items.length === 0) return;
     const ok = await copyToClipboard(buildGroceryShareText(items));
     setCopyState(ok ? "ok" : "error");
-    setTimeout(() => setCopyState("idle"), 4000);
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(
+      () => setCopyState("idle"),
+      ok ? COPIED_DURATION_MS : 4000,
+    );
   }
 
   return (
@@ -54,6 +68,7 @@ export function GroceryScreen({
           items={items}
           onTogglePantry={onTogglePantry}
           onTogglePurchased={onTogglePurchased}
+          onOpenMeals={() => onNavigate("meals")}
         />
       </section>
 
@@ -98,13 +113,25 @@ export function GroceryScreen({
           <p className="text-sm text-ink-700">
             Tu peux la coller dans Messenger, par texto ou par courriel.
           </p>
-          <Button size="lg" onClick={handleCopy} fullWidth disabled={items.length === 0}>
-            Copier pour Messenger
+          <Button
+            size="lg"
+            onClick={handleCopy}
+            fullWidth
+            disabled={items.length === 0}
+            variant={copyState === "ok" ? "secondary" : "primary"}
+            aria-live="polite"
+          >
+            {copyState === "ok"
+              ? "✓ Liste copiée — copier à nouveau"
+              : "Copier pour Messenger"}
           </Button>
-          {copyState === "ok" ? (
-            <Badge tone="moss">Liste copiée.</Badge>
-          ) : copyState === "error" ? (
-            <Badge tone="warn">La copie n’a pas fonctionné. Essaie à nouveau.</Badge>
+          {copyState === "error" ? (
+            <p
+              role="alert"
+              className="rounded-soft bg-amber-50 px-3 py-2 text-xs text-amber-800"
+            >
+              La copie n’a pas fonctionné. Essaie à nouveau.
+            </p>
           ) : null}
           <p className="text-xs text-sand-700">
             {profile.preferredStores.length > 0

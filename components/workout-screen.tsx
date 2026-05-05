@@ -22,7 +22,6 @@ import { Card } from "./ui/card";
 import { ScreenHeader } from "./ui/screen-header";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { ToggleGroup } from "./ui/toggle-group";
 import { MascotCard } from "./mascot-card";
 import { WorkoutActivityCard } from "./workout-activity-card";
 import { WorkoutTimer } from "./workout-timer";
@@ -84,6 +83,11 @@ export function WorkoutScreen({
           {done}
           <span className="text-base font-normal text-sand-700"> / {total}</span>
         </p>
+        <p className="text-[11px] uppercase tracking-wide text-sand-600">
+          {shortMode || energyMode === "low"
+            ? `Version courte · ${total} exercice${total > 1 ? "s" : ""}`
+            : `Plan standard · ${total} exercice${total > 1 ? "s" : ""}`}
+        </p>
         <p className="text-xs text-sand-700">
           {allDone
             ? "Ce qui est fait compte. Tu peux t’arrêter ici."
@@ -96,26 +100,48 @@ export function WorkoutScreen({
           <h2 className="text-base font-semibold text-ink-900">Batterie du jour</h2>
           <p className="text-xs text-sand-700">Comment est ton énergie aujourd’hui ?</p>
         </div>
-        <ToggleGroup<EnergyMode>
-          mode="single"
-          options={energyModeOptions}
-          value={energyMode}
-          onChange={onChangeEnergy}
-        />
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-sand-700">
-            {energyMode === "low"
-              ? "Batterie basse : la version courte est appliquée d’office."
-              : shortMode
-              ? "Tu es en version courte. Tout ce qui est fait compte."
-              : "Tu peux passer en version courte si l’énergie est basse."}
-          </p>
-          {energyMode !== "low" ? (
-            <Button variant={shortMode ? "secondary" : "soft"} onClick={onToggleShortMode}>
-              {shortMode ? "Plan complet" : "Version courte"}
-            </Button>
-          ) : null}
+        <div
+          role="radiogroup"
+          aria-label="Niveau d’énergie"
+          className="grid grid-cols-3 gap-2"
+        >
+          {energyModeOptions.map((option) => {
+            const active = option.value === energyMode;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => onChangeEnergy(option.value)}
+                className={`flex h-11 items-center justify-center gap-1.5 rounded-pill border text-sm transition-colors ${
+                  active
+                    ? "border-ink-900 bg-ink-900 text-cream-50"
+                    : "border-cream-200 bg-white text-ink-700 hover:bg-cream-100"
+                }`}
+              >
+                <span aria-hidden>{option.emoji}</span>
+                {option.label}
+              </button>
+            );
+          })}
         </div>
+        <p className="text-sm text-sand-700">
+          {energyMode === "low"
+            ? "Batterie basse : la version courte est appliquée d’office."
+            : shortMode
+            ? "Tu es en version courte. Tout ce qui est fait compte."
+            : "Tu peux passer en version courte si l’énergie est basse."}
+        </p>
+        {energyMode !== "low" ? (
+          <Button
+            variant={shortMode ? "secondary" : "soft"}
+            onClick={onToggleShortMode}
+            fullWidth
+          >
+            {shortMode ? "Revenir au plan complet" : "Passer en version courte"}
+          </Button>
+        ) : null}
       </Card>
 
       {groups.length > 0 ? (

@@ -87,7 +87,8 @@ export function RecipePickerSheet({
           />
         </div>
 
-        <ul className="flex-1 overflow-y-auto px-5 pb-5 pt-3 space-y-2">
+        <div className="relative flex-1 overflow-hidden">
+          <ul className="h-full overflow-y-auto px-5 pb-8 pt-3 space-y-2">
           {selectedRecipeId ? (
             <li>
               <button
@@ -155,7 +156,12 @@ export function RecipePickerSheet({
               );
             })
           )}
-        </ul>
+          </ul>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-cream-50 to-transparent"
+          />
+        </div>
 
         <div className="border-t border-cream-200 bg-white px-5 py-3 safe-bottom">
           <Button variant="secondary" onClick={onClose} fullWidth>

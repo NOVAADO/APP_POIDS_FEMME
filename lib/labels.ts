@@ -73,9 +73,9 @@ export const energyModeOptions: {
   label: string;
   emoji: string;
 }[] = [
-  { value: "low", label: "Batterie basse", emoji: "🪫" },
-  { value: "medium", label: "Batterie correcte", emoji: "🔋" },
-  { value: "good", label: "Bonne batterie", emoji: "⚡" },
+  { value: "low", label: "Basse", emoji: "🪫" },
+  { value: "medium", label: "Correcte", emoji: "🔋" },
+  { value: "good", label: "Bonne", emoji: "⚡" },
 ];
 
 export const exerciseCategoryLabel: Record<

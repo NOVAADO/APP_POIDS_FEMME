@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import type { DailyCheckIn, DayKey, MascotProfile } from "@/lib/types";
 import { DAY_KEYS, DAY_LABELS, getCurrentDayKey } from "@/lib/dates";
 import { Card } from "./ui/card";
@@ -54,6 +55,33 @@ export function ProgressScreen({
   onUpdate,
 }: ProgressScreenProps) {
   const todayKey = getCurrentDayKey();
+  const [savedFlash, setSavedFlash] = useState(false);
+  const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setSavedFlash(true);
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = setTimeout(() => setSavedFlash(false), 1500);
+    return () => {
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    };
+  }, [
+    checkIn.strengthDone,
+    checkIn.proteinTwice,
+    checkIn.fiberOrVegetables,
+    checkIn.postMealWalk,
+    checkIn.hydration,
+    checkIn.calmPause,
+    checkIn.sleepProtected,
+    checkIn.energyMorning,
+    checkIn.cravings,
+    checkIn.digestion,
+  ]);
 
   function hasAction(c: DailyCheckIn | undefined): boolean {
     if (!c) return false;
@@ -71,6 +99,15 @@ export function ProgressScreen({
 
   return (
     <div className="space-y-6">
+      <div
+        aria-live="polite"
+        className={`pointer-events-none fixed left-1/2 top-4 z-20 -translate-x-1/2 rounded-pill bg-moss-500 px-4 py-1.5 text-xs font-medium text-cream-50 shadow-soft transition-opacity ${
+          savedFlash ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        ✓ Enregistré
+      </div>
+
       <ScreenHeader
         eyebrow="Progression"
         title="Suivi doux"

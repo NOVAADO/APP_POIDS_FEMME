@@ -76,7 +76,9 @@ export function RecipeCard({
         {mealTypeLabel[recipe.mealType]} · {compatLabel}
       </p>
 
-      <h3 className="text-xl font-semibold leading-snug text-ink-900">{recipe.title}</h3>
+      <h3 className="line-clamp-2 text-xl font-semibold leading-snug text-ink-900">
+        {recipe.title}
+      </h3>
 
       <div className="flex flex-wrap gap-1.5 text-xs">
         <Badge tone="neutral">{recipe.prepTimeMinutes} min</Badge>

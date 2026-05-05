@@ -17,11 +17,13 @@ import {
   breakfastPreferenceOptions,
   cookingCapacityOptions,
   equipmentOptions,
+  equipmentLabel,
   foodFilterOptions,
   foodStructurePreferenceOptions,
   hormonalStageOptions,
   neuroProfileOptions,
   servingsOptions,
+  storeLabel,
   storeOptions,
 } from "@/lib/labels";
 import { Card } from "./ui/card";
@@ -90,6 +92,61 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
     setOpenSection((curr) => (curr === key ? null : key));
   }
 
+  function joinShort(parts: string[], max = 3): string {
+    if (parts.length === 0) return "";
+    if (parts.length <= max) return parts.join(" · ");
+    return `${parts.slice(0, max).join(" · ")} +${parts.length - max}`;
+  }
+
+  function summaryFor(key: SectionKey): string {
+    switch (key) {
+      case "compagne":
+        return mascot.name;
+      case "contexte": {
+        const stage = hormonalStageOptions.find((o) => o.value === profile.hormonalStage)?.label;
+        const neuro = profile.neuroProfiles
+          .map((n) => neuroProfileOptions.find((o) => o.value === n)?.label)
+          .filter((s): s is string => Boolean(s));
+        return [stage, ...neuro].filter(Boolean).join(" · ");
+      }
+      case "alimentation": {
+        const filters = profile.foodFilters
+          .map((f) => foodFilterOptions.find((o) => o.value === f)?.label)
+          .filter((s): s is string => Boolean(s));
+        const repere = foodStructurePreferenceOptions.find(
+          (o) => o.value === profile.foodStructurePreference,
+        )?.label;
+        const cooking = cookingCapacityOptions.find((o) => o.value === profile.cookingCapacity)
+          ?.label;
+        const parts: string[] = [];
+        if (filters.length === 0) parts.push("Aucun filtre");
+        else parts.push(joinShort(filters, 2));
+        if (repere) parts.push(`Repères : ${repere.toLowerCase()}`);
+        if (cooking) parts.push(`Cuisine : ${cooking.toLowerCase()}`);
+        return parts.join(" · ");
+      }
+      case "equipement": {
+        const eq = profile.availableEquipment
+          .filter((e) => e !== "none")
+          .map((e) => equipmentLabel[e]);
+        if (eq.length === 0) return "Aucun équipement";
+        return joinShort(eq, 3);
+      }
+      case "epiceries": {
+        const stores = profile.preferredStores.map((s) => storeLabel[s]);
+        if (stores.length === 0) return "Aucune épicerie surveillée";
+        return joinShort(stores, 3);
+      }
+      case "preferences":
+        return `${profile.householdDefaultServings} portion${
+          profile.householdDefaultServings > 1 ? "s" : ""
+        } par défaut · ${
+          breakfastPreferenceOptions.find((o) => o.value === profile.breakfastPreference)?.label ??
+          ""
+        }`;
+    }
+  }
+
   return (
     <div className="space-y-5">
       <ScreenHeader
@@ -118,6 +175,7 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
               key={key}
               title={meta.title}
               hint={meta.hint}
+              summary={summaryFor(key)}
               open={open}
               onToggle={() => toggle(key)}
             >
@@ -301,12 +359,14 @@ export function ProfileScreen({ profile, onChange }: ProfileScreenProps) {
 function Accordion({
   title,
   hint,
+  summary,
   open,
   onToggle,
   children,
 }: {
   title: string;
   hint?: string;
+  summary?: string;
   open: boolean;
   onToggle: () => void;
   children: React.ReactNode;
@@ -325,7 +385,11 @@ function Accordion({
       >
         <div className="min-w-0">
           <p className="text-sm font-semibold text-ink-900">{title}</p>
-          {hint ? <p className="mt-0.5 text-xs text-sand-700">{hint}</p> : null}
+          {!open && summary ? (
+            <p className="mt-0.5 truncate text-xs text-sand-700">{summary}</p>
+          ) : hint ? (
+            <p className="mt-0.5 text-xs text-sand-700">{hint}</p>
+          ) : null}
         </div>
         <span aria-hidden className="mt-1 text-sand-700">
           {open ? "−" : "+"}

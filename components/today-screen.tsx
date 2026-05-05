@@ -1,7 +1,9 @@
 "use client";
 
 import type {
+  DailyCheckIn,
   DailyWorkoutPlan,
+  DayKey,
   EnergyMode,
   GroceryItem,
   MascotProfile,
@@ -10,11 +12,12 @@ import type {
   UserProfile,
   WeeklyMealPlan,
 } from "@/lib/types";
-import { formatLongDate, getCurrentDayKey } from "@/lib/dates";
+import { DAY_KEYS, DAY_LABELS, formatLongDate, getCurrentDayKey } from "@/lib/dates";
 import { mealTypeLabel } from "@/lib/labels";
 import { formatGroceryItemName } from "@/lib/format";
 import { getRecipeById } from "@/lib/recipes";
 import { getWorkoutCompletion } from "@/lib/workouts";
+import { hasAnyAction } from "@/lib/checkins";
 import { Card } from "./ui/card";
 import { ScreenHeader } from "./ui/screen-header";
 import { MascotAvatar } from "./mascot-avatar";
@@ -27,6 +30,7 @@ type TodayScreenProps = {
   shortMode: boolean;
   mealPlan: WeeklyMealPlan;
   groceryItems: GroceryItem[];
+  weeklyCheckIns: Record<DayKey, DailyCheckIn | undefined>;
   onNavigate: (tab: TabId) => void;
 };
 
@@ -45,6 +49,7 @@ export function TodayScreen({
   shortMode,
   mealPlan,
   groceryItems,
+  weeklyCheckIns,
   onNavigate,
 }: TodayScreenProps) {
   const dayKey = getCurrentDayKey();
@@ -82,6 +87,12 @@ export function TodayScreen({
           <p className="mt-1 text-xs text-sand-700">{mascot.supportTone}</p>
         </div>
       </Card>
+
+      <WeeklyConsistencyStrip
+        weeklyCheckIns={weeklyCheckIns}
+        currentDay={dayKey}
+        onClick={() => onNavigate("progress")}
+      />
 
       <PrimaryAction
         eyebrow="Bouger"
@@ -247,6 +258,56 @@ function PrimaryAction({ eyebrow, accent, icon, title, meta, hint, onClick }: Pr
         </div>
         {meta ? <div className="ml-[60px]">{meta}</div> : null}
         {hint ? <p className="ml-[60px] text-xs text-sand-700">{hint}</p> : null}
+      </Card>
+    </button>
+  );
+}
+
+type WeeklyConsistencyStripProps = {
+  weeklyCheckIns: Record<DayKey, DailyCheckIn | undefined>;
+  currentDay: DayKey;
+  onClick: () => void;
+};
+
+function WeeklyConsistencyStrip({
+  weeklyCheckIns,
+  currentDay,
+  onClick,
+}: WeeklyConsistencyStripProps) {
+  const activeDays = DAY_KEYS.filter((day) => hasAnyAction(weeklyCheckIns[day])).length;
+
+  return (
+    <button type="button" onClick={onClick} className="w-full text-left">
+      <Card padding="md" className="space-y-2 transition-colors hover:bg-cream-100">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-sand-700">
+            Ta semaine
+          </p>
+          <p className="text-xs text-sand-700">
+            {activeDays} sur 7 jour{activeDays > 1 ? "s" : ""}
+          </p>
+        </div>
+        <div
+          className="grid grid-cols-7 gap-1.5"
+          aria-label={`Semaine en cours, ${activeDays} jours actifs sur 7`}
+        >
+          {DAY_KEYS.map((day) => {
+            const active = hasAnyAction(weeklyCheckIns[day]);
+            const isToday = day === currentDay;
+            return (
+              <div
+                key={day}
+                aria-hidden
+                className={`flex flex-col items-center gap-0.5 rounded-soft py-1 text-[10px] ${
+                  isToday ? "ring-1 ring-moss-500/40" : ""
+                } ${active ? "bg-moss-50 text-moss-700" : "bg-cream-100 text-sand-700"}`}
+              >
+                <span>{DAY_LABELS[day].slice(0, 3)}</span>
+                <span className="text-sm leading-none">{active ? "●" : "○"}</span>
+              </div>
+            );
+          })}
+        </div>
       </Card>
     </button>
   );

@@ -213,6 +213,7 @@ export function AppShell() {
             shortMode={shortMode}
             mealPlan={mealPlan}
             groceryItems={groceryItems}
+            weeklyCheckIns={weeklyCheckIns}
             onNavigate={setActiveTab}
           />
         )}

@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   DetectedState,
   MealAnalysisApiResponse,
   MealAnalysisErrorPayload,
   MealAnalysisResult,
 } from "@/lib/ai/meal-analysis-types";
+import {
+  addMealAnalysisEntry,
+  clearMealAnalysisHistory,
+  getMealAnalysisHistory,
+  type MealAnalysisHistoryEntry,
+} from "@/lib/ai/meal-analysis-history";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 
@@ -30,6 +36,11 @@ function isError(value: MealAnalysisApiResponse): value is MealAnalysisErrorPayl
 export function AiMealAnalysisCard() {
   const [meal, setMeal] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [history, setHistory] = useState<MealAnalysisHistoryEntry[]>([]);
+
+  useEffect(() => {
+    setHistory(getMealAnalysisHistory());
+  }, []);
 
   async function handleAnalyze() {
     const trimmed = meal.trim();
@@ -57,12 +68,24 @@ export function AiMealAnalysisCard() {
         return;
       }
       setStatus({ kind: "result", result: data });
+      setHistory(addMealAnalysisEntry(trimmed, data));
     } catch {
       setStatus({
         kind: "error",
         message: "L’analyse n’a pas fonctionné pour l’instant. Tu peux réessayer plus tard.",
       });
     }
+  }
+
+  function handleReuse(entry: MealAnalysisHistoryEntry) {
+    setMeal(entry.meal);
+    setStatus({ kind: "result", result: entry.result });
+    setHistory(addMealAnalysisEntry(entry.meal, entry.result));
+  }
+
+  function handleClearHistory() {
+    clearMealAnalysisHistory();
+    setHistory([]);
   }
 
   return (
@@ -110,6 +133,39 @@ export function AiMealAnalysisCard() {
       ) : null}
 
       {status.kind === "result" ? <MealAnalysisResultBlock result={status.result} /> : null}
+
+      {history.length > 0 ? (
+        <div className="space-y-2 border-t border-cream-200 pt-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
+              Repas récents
+            </p>
+            <button
+              type="button"
+              onClick={handleClearHistory}
+              className="text-[11px] text-sand-700 underline-offset-2 hover:underline"
+            >
+              Effacer
+            </button>
+          </div>
+          <ul className="space-y-1.5">
+            {history.map((entry) => (
+              <li key={entry.id}>
+                <button
+                  type="button"
+                  onClick={() => handleReuse(entry)}
+                  className="flex w-full items-center gap-2 rounded-soft border border-cream-200 bg-white px-3 py-2 text-left text-sm text-ink-700 transition-colors hover:bg-cream-100"
+                >
+                  <span aria-hidden className="text-xs text-sand-700">
+                    ↺
+                  </span>
+                  <span className="line-clamp-1 flex-1">{entry.meal}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </Card>
   );
 }

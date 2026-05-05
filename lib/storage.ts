@@ -41,4 +41,5 @@ export const StorageKeys = {
   activeTab: "activeTab",
   weekStart: "weekStart",
   welcomeSeen: "welcomeSeen",
+  aiMealHistory: "aiMealHistory",
 } as const;

@@ -122,8 +122,9 @@ export function MealsScreen({
             className="flex w-full items-center justify-between gap-2 text-left"
           >
             <span className="text-sm font-medium text-ink-900">Repères alimentaires</span>
-            <span className="text-xs text-ink-700">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-moss-600 underline-offset-2 group-hover:underline">
               {structureInfoOpen ? "Masquer" : "En savoir plus"}
+              <span aria-hidden>{structureInfoOpen ? "▴" : "▾"}</span>
             </span>
           </button>
           {structureInfoOpen ? (

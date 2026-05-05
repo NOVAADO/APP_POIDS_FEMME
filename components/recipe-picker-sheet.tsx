@@ -35,7 +35,12 @@ export function RecipePickerSheet({
       if (e.key === "Escape") onClose();
     }
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [open, onClose]);
 
   const filtered = useMemo(() => {
@@ -64,10 +69,10 @@ export function RecipePickerSheet({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fermer"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink-700 shadow-soft hover:bg-cream-100"
+            aria-label="Fermer le choix de recette"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink-700 shadow-soft hover:bg-cream-100 active:bg-cream-200"
           >
-            <span aria-hidden className="text-base">
+            <span aria-hidden className="text-lg">
               ✕
             </span>
           </button>
@@ -82,7 +87,8 @@ export function RecipePickerSheet({
           />
         </div>
 
-        <ul className="flex-1 overflow-y-auto px-5 pb-5 pt-3 space-y-2">
+        <div className="relative flex-1 overflow-hidden">
+          <ul className="h-full overflow-y-auto px-5 pb-8 pt-3 space-y-2">
           {selectedRecipeId ? (
             <li>
               <button
@@ -150,7 +156,12 @@ export function RecipePickerSheet({
               );
             })
           )}
-        </ul>
+          </ul>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-cream-50 to-transparent"
+          />
+        </div>
 
         <div className="border-t border-cream-200 bg-white px-5 py-3 safe-bottom">
           <Button variant="secondary" onClick={onClose} fullWidth>

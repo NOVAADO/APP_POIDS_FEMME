@@ -76,7 +76,9 @@ export function RecipeCard({
         {mealTypeLabel[recipe.mealType]} · {compatLabel}
       </p>
 
-      <h3 className="text-xl font-semibold leading-snug text-ink-900">{recipe.title}</h3>
+      <h3 className="line-clamp-2 text-xl font-semibold leading-snug text-ink-900">
+        {recipe.title}
+      </h3>
 
       <div className="flex flex-wrap gap-1.5 text-xs">
         <Badge tone="neutral">{recipe.prepTimeMinutes} min</Badge>
@@ -119,13 +121,17 @@ export function RecipeCard({
         type="button"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        className="inline-flex h-10 items-center rounded-pill bg-cream-100 px-4 text-sm font-medium text-ink-900 transition-colors hover:bg-cream-200"
+        aria-controls={`recipe-${recipe.id}-details`}
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-pill bg-cream-100 px-4 text-sm font-medium text-ink-900 transition-colors hover:bg-cream-200 active:bg-cream-200"
       >
         {expanded ? "Masquer la recette" : "Voir la recette"}
+        <span aria-hidden className="text-base">
+          {expanded ? "▴" : "▾"}
+        </span>
       </button>
 
       {expanded ? (
-        <div className="space-y-4 border-t border-cream-200 pt-4">
+        <div id={`recipe-${recipe.id}-details`} className="space-y-4 border-t border-cream-200 pt-4">
           <div>
             <p className="mb-1 text-xs font-medium uppercase tracking-wide text-sand-600">
               Ingrédients

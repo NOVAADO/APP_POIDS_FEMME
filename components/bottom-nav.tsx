@@ -5,16 +5,17 @@ import type { TabId } from "@/lib/types";
 type Tab = {
   id: TabId;
   label: string;
+  ariaLabel: string;
   icon: string;
 };
 
 const tabs: Tab[] = [
-  { id: "today", label: "Aujourd’hui", icon: "🌿" },
-  { id: "workout", label: "Bouger", icon: "💪" },
-  { id: "meals", label: "Repas", icon: "🍲" },
-  { id: "grocery", label: "Épicerie", icon: "🛒" },
-  { id: "progress", label: "Progression", icon: "📈" },
-  { id: "profile", label: "Profil", icon: "👤" },
+  { id: "today", label: "Auj.", ariaLabel: "Aujourd’hui", icon: "🌿" },
+  { id: "workout", label: "Bouger", ariaLabel: "Bouger", icon: "💪" },
+  { id: "meals", label: "Repas", ariaLabel: "Repas", icon: "🍲" },
+  { id: "grocery", label: "Épicerie", ariaLabel: "Épicerie", icon: "🛒" },
+  { id: "progress", label: "Suivi", ariaLabel: "Progression", icon: "📈" },
+  { id: "profile", label: "Profil", ariaLabel: "Profil", icon: "👤" },
 ];
 
 type BottomNavProps = {
@@ -37,7 +38,8 @@ export function BottomNav({ active, onChange }: BottomNavProps) {
                 type="button"
                 onClick={() => onChange(tab.id)}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex w-full flex-col items-center gap-0.5 rounded-pill px-1 py-1.5 text-[10px] transition-colors ${
+                aria-label={tab.ariaLabel}
+                className={`flex min-w-0 w-full flex-col items-center gap-0.5 rounded-pill px-1 py-1.5 text-[10px] transition-colors ${
                   isActive
                     ? "bg-ink-900 text-cream-50"
                     : "text-sand-600 hover:text-ink-700"
@@ -46,7 +48,7 @@ export function BottomNav({ active, onChange }: BottomNavProps) {
                 <span aria-hidden className="text-lg">
                   {tab.icon}
                 </span>
-                <span className={isActive ? "font-medium" : ""}>{tab.label}</span>
+                <span className={`truncate ${isActive ? "font-medium" : ""}`}>{tab.label}</span>
               </button>
             </li>
           );

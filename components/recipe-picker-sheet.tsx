@@ -35,7 +35,12 @@ export function RecipePickerSheet({
       if (e.key === "Escape") onClose();
     }
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [open, onClose]);
 
   const filtered = useMemo(() => {
@@ -64,10 +69,10 @@ export function RecipePickerSheet({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fermer"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink-700 shadow-soft hover:bg-cream-100"
+            aria-label="Fermer le choix de recette"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink-700 shadow-soft hover:bg-cream-100 active:bg-cream-200"
           >
-            <span aria-hidden className="text-base">
+            <span aria-hidden className="text-lg">
               ✕
             </span>
           </button>

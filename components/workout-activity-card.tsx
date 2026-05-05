@@ -103,13 +103,18 @@ export function WorkoutActivityCard({
           </p>
         ) : null}
 
-        <div className="flex flex-wrap gap-1.5">
+        <div
+          role="group"
+          aria-label={`Variante de ${exercise.name}`}
+          className="flex flex-wrap gap-1.5"
+        >
           {(["soft", "standard", "progression"] as Variant[]).map((v) => (
             <button
               key={v}
               type="button"
               onClick={() => setVariant(v)}
               aria-pressed={variant === v}
+              aria-label={`Variante ${variantLabel[v].toLowerCase()} de ${exercise.name}`}
               className={`inline-flex h-8 items-center rounded-pill border px-3 text-xs transition-colors ${
                 variant === v
                   ? "border-ink-900 bg-ink-900 text-cream-50"

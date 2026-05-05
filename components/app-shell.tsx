@@ -248,6 +248,7 @@ export function AppShell() {
             mascot={mascot}
             onTogglePantry={handleTogglePantry}
             onTogglePurchased={handleTogglePurchased}
+            onNavigate={setActiveTab}
           />
         )}
         {activeTab === "progress" && (

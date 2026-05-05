@@ -41,6 +41,7 @@ export function MealPlanner({
 }: MealPlannerProps) {
   const [openDay, setOpenDay] = useState<DayKey | null>(getCurrentDayKey());
   const [picker, setPicker] = useState<PickerTarget>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const pickerOptions = picker
     ? getRecipesByMealType(visibleRecipes, picker.mealType)
@@ -52,6 +53,16 @@ export function MealPlanner({
     ? `${DAY_LABELS[picker.day]} · ${mealTypeLabel[picker.mealType]}`
     : "";
 
+  function handleResetClick() {
+    if (!confirmReset) {
+      setConfirmReset(true);
+      window.setTimeout(() => setConfirmReset(false), 5000);
+      return;
+    }
+    setConfirmReset(false);
+    onResetWeek();
+  }
+
   return (
     <Card padding="lg" className="space-y-4">
       <div className="flex items-start justify-between gap-3">
@@ -61,9 +72,24 @@ export function MealPlanner({
             On ajuste un jour à la fois. Tu peux commencer par les soupers seulement.
           </p>
         </div>
-        <Button variant="secondary" onClick={onResetWeek}>
-          Nouvelle semaine
-        </Button>
+        <div className="flex flex-col items-end gap-1">
+          <Button
+            variant={confirmReset ? "primary" : "secondary"}
+            onClick={handleResetClick}
+            aria-live="polite"
+          >
+            {confirmReset ? "Confirmer ?" : "Nouvelle semaine"}
+          </Button>
+          {confirmReset ? (
+            <button
+              type="button"
+              onClick={() => setConfirmReset(false)}
+              className="text-[11px] text-sand-700 underline-offset-2 hover:underline"
+            >
+              Annuler
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <ul className="space-y-2">

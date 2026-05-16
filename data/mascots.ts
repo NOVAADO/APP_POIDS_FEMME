@@ -1,5 +1,11 @@
 import type { MascotProfile } from "@/lib/types";
 
+// Contrat éditorial immutable (voir CLAUDE.md « Règles produit non négociables ») :
+// la mascotte n'a aucune attente envers l'utilisatrice. Sa présence est inconditionnelle.
+// Aucun message ne doit exprimer déception, tristesse, inquiétude ou attente
+// conditionnelle à un comportement utilisateur. Pas de « j'aimerais que tu… »,
+// « je serais content si… », « tu m'as déçue ». Compagnon, pas coach.
+
 export const mascots: MascotProfile[] = [
   {
     id: "capybara",

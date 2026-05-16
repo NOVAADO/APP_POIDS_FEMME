@@ -95,7 +95,7 @@ export const exercises: Exercise[] = [
   },
   {
     id: "dead-bug",
-    name: "Dead bug doux",
+    name: "Bras et jambe croisés au sol",
     category: "core",
     sets: 2,
     reps: "8 par côté",

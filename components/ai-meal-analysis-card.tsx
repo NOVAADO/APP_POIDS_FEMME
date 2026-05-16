@@ -13,8 +13,14 @@ import {
   getMealAnalysisHistory,
   type MealAnalysisHistoryEntry,
 } from "@/lib/ai/meal-analysis-history";
+import type { MascotProfile } from "@/lib/types";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { MascotAvatar } from "./mascot-avatar";
+
+type AiMealAnalysisCardProps = {
+  mascot?: MascotProfile;
+};
 
 type Status =
   | { kind: "idle" }
@@ -33,7 +39,7 @@ function isError(value: MealAnalysisApiResponse): value is MealAnalysisErrorPayl
   return (value as MealAnalysisErrorPayload).error === true;
 }
 
-export function AiMealAnalysisCard() {
+export function AiMealAnalysisCard({ mascot }: AiMealAnalysisCardProps = {}) {
   const [meal, setMeal] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [history, setHistory] = useState<MealAnalysisHistoryEntry[]>([]);
@@ -132,7 +138,20 @@ export function AiMealAnalysisCard() {
         <p className="rounded-soft bg-amber-50 p-3 text-sm text-amber-800">{status.message}</p>
       ) : null}
 
-      {status.kind === "result" ? <MealAnalysisResultBlock result={status.result} /> : null}
+      {status.kind === "result" ? (
+        <>
+          {mascot ? (
+            <div className="flex items-center gap-2.5 border-t border-cream-200 pt-3">
+              <MascotAvatar mascot={mascot} size="sm" />
+              <p className="text-xs text-sand-700">
+                <span className="font-medium text-ink-900">{mascot.name}</span> regarde la
+                structure du repas avec toi, sans jugement.
+              </p>
+            </div>
+          ) : null}
+          <MealAnalysisResultBlock result={status.result} />
+        </>
+      ) : null}
 
       {history.length > 0 ? (
         <div className="space-y-2 border-t border-cream-200 pt-3">

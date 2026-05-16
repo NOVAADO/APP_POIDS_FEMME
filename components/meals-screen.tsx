@@ -172,7 +172,7 @@ export function MealsScreen({
         </section>
       ) : null}
 
-      <AiMealAnalysisCard />
+      <AiMealAnalysisCard mascot={mascot} />
 
       <section className="space-y-3">
         <SectionHeader

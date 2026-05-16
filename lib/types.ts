@@ -132,6 +132,7 @@ export type WorkoutActivity = {
   reps?: string;
   duration?: string;
   completed: boolean;
+  setAside?: boolean;
   supersetGroupId?: string;
 };
 

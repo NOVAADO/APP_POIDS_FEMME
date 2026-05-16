@@ -41,10 +41,14 @@ export function getExerciseById(exerciseId: string): Exercise | undefined {
 export function getWorkoutCompletion(plan: DailyWorkoutPlan): {
   done: number;
   total: number;
+  setAside: number;
+  effectiveTotal: number;
 } {
   const total = plan.activities.length;
-  const done = plan.activities.filter((a) => a.completed).length;
-  return { done, total };
+  const setAside = plan.activities.filter((a) => a.setAside).length;
+  const done = plan.activities.filter((a) => a.completed && !a.setAside).length;
+  const effectiveTotal = total - setAside;
+  return { done, total, setAside, effectiveTotal };
 }
 
 const PRIORITY_BY_CATEGORY: Record<Exercise["category"], number> = {
@@ -124,6 +128,22 @@ export function toggleActivityCompleted(
     activities: plan.activities.map((a) =>
       a.id === activityId ? { ...a, completed: !a.completed } : a,
     ),
+  };
+}
+
+export function toggleActivitySetAside(
+  plan: DailyWorkoutPlan,
+  activityId: string,
+): DailyWorkoutPlan {
+  return {
+    ...plan,
+    activities: plan.activities.map((a) => {
+      if (a.id !== activityId) return a;
+      const nextSetAside = !a.setAside;
+      // Setting aside an activity clears its completed flag so the count reflects
+      // the user's current intent without losing the original plan structure.
+      return { ...a, setAside: nextSetAside, completed: nextSetAside ? false : a.completed };
+    }),
   };
 }
 

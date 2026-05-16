@@ -36,6 +36,7 @@ type WorkoutScreenProps = {
   energyMode: EnergyMode;
   shortMode: boolean;
   onToggleActivity: (activityId: string) => void;
+  onToggleSetAside: (activityId: string) => void;
   onChangeEnergy: (mode: EnergyMode) => void;
   onToggleShortMode: () => void;
 };
@@ -47,12 +48,14 @@ export function WorkoutScreen({
   energyMode,
   shortMode,
   onToggleActivity,
+  onToggleSetAside,
   onChangeEnergy,
   onToggleShortMode,
 }: WorkoutScreenProps) {
   const { groups, singles } = groupBySuperset(plan.activities);
-  const { done, total } = getWorkoutCompletion(plan);
-  const allDone = total > 0 && done === total;
+  const { done, total, setAside, effectiveTotal } = getWorkoutCompletion(plan);
+  const allSetAside = total > 0 && setAside === total;
+  const allDone = effectiveTotal > 0 && done === effectiveTotal;
 
   function renderActivity(activity: WorkoutActivity) {
     const exercise = getExerciseById(activity.exerciseId);
@@ -65,6 +68,7 @@ export function WorkoutScreen({
         exercise={exercise}
         missingEquipment={missing}
         onToggle={() => onToggleActivity(activity.id)}
+        onToggleSetAside={() => onToggleSetAside(activity.id)}
       />
     );
   }
@@ -81,21 +85,37 @@ export function WorkoutScreen({
           {done > 0 ? <Badge tone="moss">Ce qui est fait compte</Badge> : null}
         </div>
         <p className="text-lg font-semibold text-ink-900">
-          {done === 0
-            ? `${total} mouvement${total > 1 ? "s" : ""} possible${total > 1 ? "s" : ""}`
+          {allSetAside
+            ? "Tout est mis de côté pour aujourd’hui"
+            : done === 0
+            ? `${effectiveTotal} mouvement${effectiveTotal > 1 ? "s" : ""} possible${effectiveTotal > 1 ? "s" : ""}`
             : `${done} mouvement${done > 1 ? "s" : ""} fait${done > 1 ? "s" : ""} aujourd’hui`}
         </p>
         <p className="text-[11px] uppercase tracking-wide text-sand-600">
-          {shortMode || energyMode === "low" ? "Version courte" : "Plan standard"}
+          {shortMode || energyMode === "low" ? "Version courte" : "Plan régulier"}
+          {setAside > 0 && !allSetAside ? ` · ${setAside} mis de côté` : ""}
         </p>
         <p className="text-xs text-sand-700">
-          {done === 0
+          {allSetAside
+            ? "On reprend une autre fois. Aucun rattrapage."
+            : done === 0
             ? "Tu peux commencer par une seule option."
             : allDone
             ? "Tu peux garder cette sensation, sans en rajouter."
             : "Ce qui est fait compte. Tu peux t’arrêter ici."}
         </p>
       </Card>
+
+      {energyMode === "low" ? (
+        <Card padding="md" className="space-y-1 bg-cream-100">
+          <p className="text-xs font-medium uppercase tracking-wide text-sand-700">
+            Version courte recommandée
+          </p>
+          <p className="text-sm text-ink-700">
+            Un ou deux mouvements suffisent aujourd’hui. Tu peux mettre le reste de côté.
+          </p>
+        </Card>
+      ) : null}
 
       <Card padding="lg" className="space-y-3">
         <div>
@@ -148,11 +168,11 @@ export function WorkoutScreen({
 
       {groups.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold text-ink-900">Supersets</h2>
+          <h2 className="text-lg font-semibold text-ink-900">Séries enchaînées</h2>
           {groups.map((group, index) => (
             <div key={group.id} className="rounded-soft bg-cream-100 p-3">
               <p className="mb-2 px-1 text-xs font-medium uppercase tracking-wide text-sand-700">
-                Superset {String.fromCharCode(65 + index)}
+                Bloc {String.fromCharCode(65 + index)}
               </p>
               <div className="space-y-2">{group.activities.map(renderActivity)}</div>
             </div>
@@ -162,7 +182,7 @@ export function WorkoutScreen({
 
       {singles.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold text-ink-900">Activités simples</h2>
+          <h2 className="text-lg font-semibold text-ink-900">Mouvements simples</h2>
           <div className="space-y-3">{singles.map(renderActivity)}</div>
         </section>
       ) : null}
@@ -175,8 +195,12 @@ export function WorkoutScreen({
               {mascot.name}
             </p>
             <p className="mt-1 text-sm text-ink-900">
-              {done === 0
-                ? "Tu peux commencer par une seule option."
+              {allSetAside
+                ? "On reprend une autre fois. Adapter, ce n’est pas abandonner."
+                : done === 0 && setAside > 0
+                ? "Adapter, ce n’est pas abandonner. Un mouvement suffit pour garder le lien."
+                : done === 0
+                ? "Tu peux commencer par une seule option. Adapter, ce n’est pas abandonner."
                 : allDone
                 ? "Tu peux garder cette sensation, sans en rajouter."
                 : "Ce qui est fait compte. Tu peux t’arrêter ici."}

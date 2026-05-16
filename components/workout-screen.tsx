@@ -76,22 +76,23 @@ export function WorkoutScreen({
 
       <Card hero padding="lg" className="space-y-2">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-sand-700">Activités faites</p>
-          {allDone ? <Badge tone="moss">Belle constance</Badge> : null}
+          <p className="text-sm text-sand-700">Aujourd’hui</p>
+          {done > 0 ? <Badge tone="moss">Ce qui est fait compte</Badge> : null}
         </div>
-        <p className="text-3xl font-semibold tabular-nums text-ink-900">
-          {done}
-          <span className="text-base font-normal text-sand-700"> / {total}</span>
+        <p className="text-lg font-semibold text-ink-900">
+          {done === 0
+            ? `${total} mouvement${total > 1 ? "s" : ""} possible${total > 1 ? "s" : ""}`
+            : `${done} mouvement${done > 1 ? "s" : ""} fait${done > 1 ? "s" : ""} aujourd’hui`}
         </p>
         <p className="text-[11px] uppercase tracking-wide text-sand-600">
-          {shortMode || energyMode === "low"
-            ? `Version courte · ${total} exercice${total > 1 ? "s" : ""}`
-            : `Plan standard · ${total} exercice${total > 1 ? "s" : ""}`}
+          {shortMode || energyMode === "low" ? "Version courte" : "Plan standard"}
         </p>
         <p className="text-xs text-sand-700">
-          {allDone
-            ? "Ce qui est fait compte. Tu peux t’arrêter ici."
-            : "Aucun rattrapage. La version courte compte autant."}
+          {done === 0
+            ? "Tu peux en choisir un. Ou pas. La version courte compte."
+            : allDone
+            ? "Tu peux t’arrêter ici. Aucun rattrapage."
+            : "Tu peux continuer ou t’arrêter ici. Aucun rattrapage."}
         </p>
       </Card>
 

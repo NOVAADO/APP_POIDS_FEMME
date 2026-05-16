@@ -25,6 +25,7 @@ import {
   applyEnergyMode,
   getShortWorkoutPlan,
   toggleActivityCompleted,
+  toggleActivitySetAside,
 } from "@/lib/workouts";
 import {
   buildGroceryList,
@@ -142,6 +143,10 @@ export function AppShell() {
     setBasePlan((prev) => toggleActivityCompleted(prev, activityId));
   }
 
+  function handleToggleSetAside(activityId: string) {
+    setBasePlan((prev) => toggleActivitySetAside(prev, activityId));
+  }
+
   function handleChangeRecipe(day: DayKey, mealType: MealType, recipeId: string | null) {
     setMealPlan((prev) => {
       const dayMeals = { ...prev.days[day] };
@@ -225,6 +230,7 @@ export function AppShell() {
             energyMode={energyMode}
             shortMode={shortMode}
             onToggleActivity={handleToggleActivity}
+            onToggleSetAside={handleToggleSetAside}
             onChangeEnergy={setEnergyMode}
             onToggleShortMode={() => setShortMode((s) => !s)}
           />

@@ -23,6 +23,7 @@ import { ScreenHeader } from "./ui/screen-header";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { MascotCard } from "./mascot-card";
+import { MascotAvatar } from "./mascot-avatar";
 import { WorkoutActivityCard } from "./workout-activity-card";
 import { WorkoutTimer } from "./workout-timer";
 import { ExerciseIllustration } from "./exercise-illustration";
@@ -89,10 +90,10 @@ export function WorkoutScreen({
         </p>
         <p className="text-xs text-sand-700">
           {done === 0
-            ? "Tu peux en choisir un. Ou pas. La version courte compte."
+            ? "Tu peux commencer par une seule option."
             : allDone
-            ? "Tu peux t’arrêter ici. Aucun rattrapage."
-            : "Tu peux continuer ou t’arrêter ici. Aucun rattrapage."}
+            ? "Tu peux garder cette sensation, sans en rajouter."
+            : "Ce qui est fait compte. Tu peux t’arrêter ici."}
         </p>
       </Card>
 
@@ -164,6 +165,24 @@ export function WorkoutScreen({
           <h2 className="text-lg font-semibold text-ink-900">Activités simples</h2>
           <div className="space-y-3">{singles.map(renderActivity)}</div>
         </section>
+      ) : null}
+
+      {total > 0 ? (
+        <Card padding="md" className="flex items-start gap-3">
+          <MascotAvatar mascot={mascot} size="sm" />
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
+              {mascot.name}
+            </p>
+            <p className="mt-1 text-sm text-ink-900">
+              {done === 0
+                ? "Tu peux commencer par une seule option."
+                : allDone
+                ? "Tu peux garder cette sensation, sans en rajouter."
+                : "Ce qui est fait compte. Tu peux t’arrêter ici."}
+            </p>
+          </div>
+        </Card>
       ) : null}
 
       <WorkoutTimer />

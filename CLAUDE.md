@@ -124,3 +124,92 @@ Si la réponse à (2) est "oui" ou "peut-être", **refuser** ou re-cadrer.
 - Clé API OpenAI jamais exposée côté client. Toute analyse IA passe par `app/api/ai/`.
 - Aucune dépendance lourde sans justification (l'app vise un Time To Interactive court sur mobile).
 - Mobile-first. Tests à viewport 360-414px de large en priorité.
+
+---
+
+# Conventions d'assets visuels — direction A (Passe B3+)
+
+## Dossiers
+
+L'application accepte des assets visuels locaux dans `public/` selon la convention suivante :
+
+| Dossier | Usage | Composant qui consomme |
+|---|---|---|
+| `public/mascots/` | Avatars et illustrations des mascottes | `MascotAvatar` (voir `components/mascot-avatar.tsx`) |
+| `public/exercises/` | Illustrations des exercices (futur) | `ExerciseIllustration` (à refactorer dans une passe suivante) |
+| `public/scenes/` | Scènes d'arrière-plan, fonds texturés, décors (futur) | À définir |
+
+Les dossiers contiennent un `.gitkeep` pour rester suivis par git tant qu'ils sont vides.
+
+## Conventions de nommage
+
+**Mascottes** : `<id-mascotte>-<variante>.<ext>`
+- `capybara-avatar.webp` — avatar circulaire 1:1 (carte profil, hero, signatures)
+- `capybara-hero.webp` — hero paysage 4:3 (Today / Petite action)
+- `capybara-pose.webp` — pose carrée 1:1 (signatures contextuelles)
+
+L'`id-mascotte` correspond exactement à la valeur `MascotAnimal` dans `lib/types.ts` (`capybara`, `loutre`, `renarde`, `biche`, `ourse`, `hibou`, `koala`, `louve`).
+
+**Exercices** (futur) : `<id-exercice>-<variante>.<ext>` (ex : `squat-chaise-card.webp`).
+
+## Formats recommandés (par ordre de préférence)
+
+1. **WebP** — format de référence. Bon ratio compression/qualité, supporté par tous les navigateurs cibles.
+2. **PNG** — fallback acceptable, surtout pour les illustrations avec transparence.
+3. **SVG** — accepté **uniquement si l'illustration est vraiment travaillée** (vectoriel détaillé, pas un template générique). Ne pas utiliser pour remplacer le SVG-template actuel par un autre SVG-template.
+
+**Format à éviter** : JPEG (compression destructive sur les bords doux d'illustration).
+
+## Tailles attendues
+
+| Variante | Dimensions | Ratio | Marge interne |
+|---|---|---|---|
+| `-avatar` | 512×512 px minimum | 1:1 | ≥ 40 px (le code applique `rounded-full` qui clippe en cercle) |
+| `-hero` | 1024×768 px minimum | 4:3 | Sujet centré ou décentré, scène respirante |
+| `-pose` | 768×768 px minimum | 1:1 | Sujet à ~70 % du cadre, espace négatif autour |
+
+## Fallback obligatoire
+
+**Règle stricte** : aucun composant qui charge une image locale ne doit afficher d'image cassée à l'utilisatrice.
+
+Le pattern à respecter (déjà appliqué dans `components/mascot-avatar.tsx`) :
+
+```tsx
+const [imageFailed, setImageFailed] = useState(false);
+const hasCustomAvatar = MASCOTS_WITH_CUSTOM_AVATAR.has(mascot.id);
+const useImage = hasCustomAvatar && !imageFailed;
+
+return useImage ? (
+  <Image ... onError={() => setImageFailed(true)} />
+) : (
+  /* fallback : SVG existant, ou autre rendu safe */
+);
+```
+
+Le composant tente le rendu image, et bascule silencieusement vers le rendu SVG si l'image manque ou échoue à charger. Build et runtime restent stables même si un fichier `.webp` est manquant ou en cours de production.
+
+## Workflow d'ajout d'un nouvel asset
+
+1. **Produire l'asset** selon le brief (cf. document de brief visuel par direction).
+2. **Valider** contre la grille de critères du brief avant de l'intégrer.
+3. **Déposer** le fichier au chemin attendu (ex : `public/mascots/loutre-avatar.webp`).
+4. **Activer** dans le code en ajoutant l'id à la liste correspondante (pour les mascottes : `MASCOTS_WITH_CUSTOM_AVATAR` dans `components/mascot-avatar.tsx`).
+5. **Tester** : si l'image apparaît, l'intégration fonctionne. Si le SVG fallback apparaît, vérifier le chemin du fichier et son nom exact.
+
+## Règle anti-placeholder trompeur
+
+**Ne jamais prétendre qu'un placeholder est l'asset final.** Si un asset est manquant ou temporaire :
+
+- Soit le SVG fallback existant prend le relais (cas géré par le pattern ci-dessus) ;
+- Soit un placeholder explicite est utilisé avec une mention textuelle visible (ex : "Capybara — illustration à venir") afin que l'utilisatrice comprenne immédiatement qu'il s'agit d'un état transitoire.
+
+Aucun placeholder de qualité moyenne ne doit être commit sous un nom suggérant qu'il s'agit de l'asset définitif.
+
+## État actuel des assets (Passe B3)
+
+| Mascotte | Avatar custom | Hero custom | Pose custom |
+|---|---|---|---|
+| capybara | ⏳ attendu à `public/mascots/capybara-avatar.webp` (set activé, fallback SVG en attendant) | — | — |
+| loutre, renarde, biche, ourse, hibou, koala, louve | — (rendu SVG actuel) | — | — |
+
+Tant que `public/mascots/capybara-avatar.webp` n'est pas déposé, l'utilisatrice voit le rendu SVG actuel de Capybara — aucune image cassée ne s'affiche.

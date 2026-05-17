@@ -22,7 +22,12 @@ import { hasAnyAction } from "@/lib/checkins";
 import { Card } from "./ui/card";
 import { ScreenHeader } from "./ui/screen-header";
 import { Button } from "./ui/button";
+import { OrganicCard, type OrganicTone } from "./ui/organic-card";
+import { SoftHero } from "./ui/soft-hero";
+import { VisualChip } from "./ui/visual-chip";
 import { MascotAvatar } from "./mascot-avatar";
+import { MascotHero } from "./mascot-hero";
+import { MascotPresence } from "./mascot-presence";
 
 type TodayScreenProps = {
   mascot: MascotProfile;
@@ -312,16 +317,12 @@ export function TodayScreen({
         />
       ) : null}
 
-      <Card padding="md" className="flex items-start gap-3">
-        <MascotAvatar mascot={mascot} size="sm" />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-sand-600">
-            {mascot.name}
-          </p>
-          <p className="mt-1 text-sm text-ink-900">{pickHomeMessage(mascot)}</p>
+      <OrganicCard tone="paper" padding="md">
+        <MascotPresence mascot={mascot} size="sm">
+          <p>{pickHomeMessage(mascot)}</p>
           <p className="mt-1 text-xs text-sand-700">{mascot.supportTone}</p>
-        </div>
-      </Card>
+        </MascotPresence>
+      </OrganicCard>
 
       <p className="px-2 pt-2 text-center text-xs text-sand-700">
         Cette application soutient les habitudes de vie. Elle ne remplace pas un avis médical ou un
@@ -347,20 +348,20 @@ function PetiteActionHero({
   onNavigate,
 }: PetiteActionHeroProps) {
   const palette = ACTION_ACCENT[suggested.accent];
+  const organicTone = ACCENT_TO_ORGANIC[suggested.accent];
   const energyPhrase = pickEnergyPhrase(energyMode);
   return (
-    <Card hero padding="lg" className={`space-y-4 ${palette.bg}`}>
-      <div className="flex items-start gap-3">
-        <MascotAvatar mascot={mascot} size="md" />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium uppercase tracking-wide text-sand-700">
-            {mascot.name} · {energyLabel.toLowerCase()}
-          </p>
-          <p className="mt-1 text-sm text-ink-900">{energyPhrase}</p>
-        </div>
+    <SoftHero tone={organicTone}>
+      <MascotHero mascot={mascot} variant="soft" />
+
+      <div className="space-y-1 text-center">
+        <p className="text-[11px] font-medium uppercase tracking-wide text-sand-700">
+          {mascot.name} · {energyLabel.toLowerCase()}
+        </p>
+        <p className="text-sm text-ink-900">{energyPhrase}</p>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 rounded-soft bg-white/60 p-3 ring-1 ring-inset ring-white/40">
         <p className="text-[11px] font-medium uppercase tracking-wide text-sand-700">
           Petite action proposée
         </p>
@@ -382,7 +383,7 @@ function PetiteActionHero({
           {suggested.ctaLabel}
         </Button>
       </div>
-    </Card>
+    </SoftHero>
   );
 }
 
@@ -426,7 +427,7 @@ function CollapsedRest({
       : "Les autres modules sont là si tu veux y jeter un œil.";
 
   return (
-    <Card padding="md" className="space-y-3">
+    <OrganicCard tone="oat" padding="md" textured={false} className="space-y-3">
       <div className="space-y-1">
         <p className="text-xs text-sand-700">{hint}</p>
       </div>
@@ -503,7 +504,7 @@ function CollapsedRest({
           })}
         </div>
       ) : null}
-    </Card>
+    </OrganicCard>
   );
 }
 
@@ -533,6 +534,13 @@ const ACTION_ACCENT: Record<
   },
 };
 
+const ACCENT_TO_ORGANIC: Record<ActionAccent, OrganicTone> = {
+  moss: "sage",
+  rose: "rose",
+  warm: "apricot",
+  cream: "oat",
+};
+
 type PrimaryActionProps = {
   eyebrow: string;
   accent: ActionAccent;
@@ -555,13 +563,15 @@ function PrimaryAction({
   highlighted,
 }: PrimaryActionProps) {
   const palette = ACTION_ACCENT[accent];
+  const organicTone = ACCENT_TO_ORGANIC[accent];
   return (
     <button type="button" onClick={onClick} className="w-full text-left">
-      <Card
+      <OrganicCard
+        tone={organicTone}
         padding="lg"
-        className={`relative space-y-2 transition-shadow hover:shadow-hero ${palette.bg} ${
-          highlighted ? `ring-2 ${palette.ring}` : ""
-        }`}
+        textured={false}
+        halo={highlighted}
+        className="space-y-2 transition-shadow hover:shadow-hero"
       >
         <div className="flex items-start gap-3">
           <div
@@ -584,7 +594,7 @@ function PrimaryAction({
         </div>
         {meta ? <div className="ml-[60px]">{meta}</div> : null}
         {hint ? <p className="ml-[60px] text-xs text-sand-700">{hint}</p> : null}
-      </Card>
+      </OrganicCard>
     </button>
   );
 }

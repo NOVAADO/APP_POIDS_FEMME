@@ -10,6 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Pre-existing — kept as is to avoid breaking current usages
         cream: {
           50: "#fbf8f3",
           100: "#f4eee2",
@@ -32,6 +33,51 @@ const config: Config = {
           500: "#5a554f",
           700: "#332f2a",
           900: "#1c1916",
+        },
+        // Direction A — organic notebook palette (additive)
+        paper: {
+          50: "#fdfaf4",
+          100: "#f8f1e2",
+        },
+        linen: {
+          100: "#efe6d2",
+          200: "#e1d3b6",
+        },
+        sage: {
+          50: "#f0f4ea",
+          100: "#dde6cf",
+          200: "#c2d2ad",
+          400: "#9bb088",
+          500: "#7e9a6c",
+          600: "#5f7951",
+        },
+        clay: {
+          100: "#f3dccc",
+          300: "#dfa988",
+          500: "#c47a55",
+          600: "#a35d3c",
+        },
+        apricot: {
+          100: "#fbe4ce",
+          300: "#f0b889",
+          500: "#dd8e58",
+        },
+        oat: {
+          100: "#f0e6d0",
+          200: "#e1d2b0",
+        },
+        honey: {
+          200: "#f0d59c",
+          400: "#d8a857",
+        },
+        cocoa: {
+          500: "#6a4c34",
+          700: "#3f2c1d",
+        },
+        rosewarm: {
+          100: "#f5d8d0",
+          300: "#dfa599",
+          500: "#c47565",
         },
       },
       fontFamily: {

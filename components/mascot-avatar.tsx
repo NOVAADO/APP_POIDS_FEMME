@@ -1,4 +1,7 @@
-import type { ReactElement } from "react";
+"use client";
+
+import Image from "next/image";
+import { useState, type ReactElement } from "react";
 import type { MascotAccent, MascotAnimal, MascotProfile } from "@/lib/types";
 
 type Size = "sm" | "md" | "lg";
@@ -8,6 +11,21 @@ const SIZE_CLASS: Record<Size, string> = {
   md: "h-24 w-24",
   lg: "h-32 w-32",
 };
+
+const SIZE_PX: Record<Size, number> = {
+  sm: 56,
+  md: 96,
+  lg: 128,
+};
+
+// Mascots that have a custom illustrated avatar at public/mascots/<id>-avatar.webp.
+// When listed here AND the file exists, the image is rendered. If the file is
+// missing or fails to load, the SVG renderer below is used as a graceful fallback.
+// To add a new custom avatar: drop the file at public/mascots/<id>-avatar.webp
+// AND add the id below.
+export const MASCOTS_WITH_CUSTOM_AVATAR: ReadonlySet<MascotAnimal> = new Set<MascotAnimal>([
+  "capybara",
+]);
 
 const ACCENT_BG: Record<MascotAccent, string> = {
   moss: "#e8efe0",
@@ -359,21 +377,38 @@ type MascotAvatarProps = {
 };
 
 export function MascotAvatar({ mascot, size = "md", className = "" }: MascotAvatarProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const hasCustomAvatar = MASCOTS_WITH_CUSTOM_AVATAR.has(mascot.id);
+  const useImage = hasCustomAvatar && !imageFailed;
+
   const colors = ANIMAL_COLORS[mascot.id];
   const clothes = ACCENT_CLOTHES[mascot.accent];
   const renderer = RENDERERS[mascot.id];
   const bg = ACCENT_BG[mascot.accent];
+  const sizePx = SIZE_PX[size];
 
   return (
     <div
       className={`shrink-0 overflow-hidden rounded-full ${SIZE_CLASS[size]} ${className}`}
-      style={{ backgroundColor: bg }}
+      style={{ backgroundColor: useImage ? undefined : bg }}
       role="img"
       aria-label={`${mascot.name}, ${mascot.energy.toLowerCase()}`}
     >
-      <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
-        {renderer(colors, clothes)}
-      </svg>
+      {useImage ? (
+        <Image
+          src={`/mascots/${mascot.id}-avatar.webp`}
+          alt=""
+          width={sizePx}
+          height={sizePx}
+          className="h-full w-full object-cover"
+          onError={() => setImageFailed(true)}
+          priority={size === "lg"}
+        />
+      ) : (
+        <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
+          {renderer(colors, clothes)}
+        </svg>
+      )}
     </div>
   );
 }
